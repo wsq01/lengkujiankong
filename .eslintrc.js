@@ -19,8 +19,8 @@ module.exports = {
       'x-invalid-end-tag': false
     }],
     "quotes": [1, "single"],
-    "semi": 0,
     'no-undef': 'off',
-    'camelcase': 'off'
+    'camelcase': 'off',
+    "space-before-function-paren": ["error", "always"]
   }
 }

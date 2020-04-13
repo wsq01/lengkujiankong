@@ -5,7 +5,6 @@ import Main from '@/components/Layout/index.vue'
  * meta: {
  *  title: { String|Number|Function }
  *         显示在侧边栏、面包屑和标签栏的文字
- *         使用'{{ 多语言字段 }}'形式结合多语言使用，例子看多语言的路由配置;
  *         可以传入一个回调函数，参数是当前路由对象，例子看动态路由和带参路由
  *  hideInBread: (false) 设为true后此级路由将不会出现在面包屑中，示例看QQ群路由配置
  *  hideInMenu: (false) 设为true后在左侧菜单不会显示该页面选项

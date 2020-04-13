@@ -18,17 +18,21 @@ export default {
     LoginForm
   },
   methods: {
-    ...mapActions([
-      'handleLogin',
-      'getUserInfo'
-    ]),
+    ...mapActions(['handleLogin']),
     handleSubmit ({ userName, password }) {
+      this.loading = true
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
+        this.loading = false
+        if (res.data && res.data.code === 0) {
           this.$router.push({
             name: this.$config.homeName
           })
-        })
+        } else {
+          this.$Message.error({
+            content: (res.data && res.data.message) || '登录失败',
+            duration: 2
+          })
+        }
       })
     }
   }
@@ -36,33 +40,33 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .login{
-    width: 100%;
-    height: 100%;
-    background-image: url('../../assets/images/login-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    &-con{
-        position: absolute;
-        right: 14%;
-        top: 50%;
-        transform: translateY(-60%);
-        width: 300px;
-        &-header{
-            font-size: 16px;
-            font-weight: 300;
-            text-align: center;
-            padding: 30px 0;
-        }
-        .form-con{
-            padding: 10px 0 0;
-        }
-        .login-tip{
-            font-size: 10px;
-            text-align: center;
-            color: #c3c3c3;
-        }
+.login {
+  width: 100%;
+  height: 100%;
+  background-image: url("../../assets/images/login-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  &-con {
+    position: absolute;
+    right: 14%;
+    top: 50%;
+    transform: translateY(-60%);
+    width: 300px;
+    &-header {
+      font-size: 16px;
+      font-weight: 300;
+      text-align: center;
+      padding: 30px 0;
     }
+    .form-con {
+      padding: 10px 0 0;
+    }
+    .login-tip {
+      font-size: 10px;
+      text-align: center;
+      color: #c3c3c3;
+    }
+  }
 }
 </style>
