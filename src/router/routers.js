@@ -27,58 +27,69 @@ export default [
   {
     path: '/',
     name: '_home',
-    redirect: '/home',
-    component: Main,
-    meta: {
-      hideInMenu: true,
-      notCache: true
-    },
-    children: [
-      {
-        path: '/home',
-        name: 'home',
-        meta: {
-          hideInMenu: true,
-          title: '首页',
-          notCache: true,
-          icon: 'md-home'
-        },
-        component: () => import('@/views/single-page/Home.vue')
-      }
-    ]
-  },
-  {
-    path: '/test',
-    name: '_test',
+    redirect: '/zjly',
     component: Main,
     meta: {
       notCache: true,
-      title: '测试',
+      title: '所有监控',
       icon: 'md-home'
     },
     children: [
       {
-        path: '/page1',
-        name: 'page1',
+        path: '/zjly',
+        name: 'zjly',
         meta: {
-          title: '测试页面1',
+          title: '中集冷云',
           notCache: false,
-          icon: 'md-home'
+          icon: ''
         },
-        component: () => import('@/views/single-page/Test.vue')
+        component: () => import('@/views/single-page/Home.vue')
       },
       {
-        path: '/page2',
-        name: 'page2',
+        path: '/gywl',
+        name: 'gywl',
         meta: {
-          title: '测试页面2',
+          title: '国药物流',
           notCache: false,
-          icon: 'md-home'
+          icon: ''
+        },
+        component: () => import('@/views/single-page/Template.vue')
+      },
+      {
+        path: '/jxxn',
+        name: 'jxxn',
+        meta: {
+          title: '精新相能',
+          notCache: false,
+          icon: ''
         },
         component: () => import('@/views/single-page/Template.vue')
       }
     ]
   },
+  // {
+  //   path: '/',
+  //   name: '_home',
+  //   redirect: '/home',
+  //   component: Main,
+  //   meta: {
+  //     hideInMenu: true,
+  //     notCache: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '/home',
+  //       name: 'home',
+  //       meta: {
+  //         hideInMenu: true,
+  //         title: '首页',
+  //         notCache: true,
+  //         icon: 'md-home'
+  //       },
+  //       component: () => import('@/views/single-page/Home.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/401',
     name: 'error_401',

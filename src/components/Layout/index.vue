@@ -1,12 +1,12 @@
 <template>
   <Layout style="height: 100%" class="main">
+    <div id="particles"></div>
     <Sider hide-trigger collapsible :width="256" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{overflow: 'hidden' }">
       <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
         <div class="logo-con">
-          xxxx
-          <!-- <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
-          <img v-show="collapsed" :src="minLogo" key="min-logo" /> -->
+          <img :src="maxLogo" key="max-logo" />
+          <!-- <img v-show="collapsed" :src="minLogo" key="min-logo" /> -->
         </div>
       </side-menu>
     </Sider>
@@ -19,7 +19,7 @@
       </Header>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
-          <div class="tag-nav-wrapper">
+          <div class="tag-nav-wrapper" v-show="false">
             <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
           </div>
           <Content class="content-wrapper">
@@ -43,8 +43,10 @@ import Fullscreen from './components/FullScreen'
 import { mapMutations, mapActions } from 'vuex'
 import { getNewTagList, routeEqual } from '@/libs/util'
 import routers from '@/router/routers'
-// import minLogo from '@/assets/images/logo-min.jpg'
-// import maxLogo from '@/assets/images/logo.jpg'
+// import minLogo from '@/assets/images/logo@2x.png'
+import maxLogo from '@/assets/images/logo@2x.png'
+import '@/libs/particles.min.js'
+import particlesConfig from '@/libs/particles.config.js'
 import './index.less'
 export default {
   name: 'Main',
@@ -61,7 +63,7 @@ export default {
       collapsed: false,
       sdierBgColor: '#001529',
       // minLogo,
-      // maxLogo,
+      maxLogo,
       isFullscreen: false
     }
   },
@@ -138,7 +140,7 @@ export default {
         route: { name, query, params, meta },
         type: 'push'
       })
-      this.setBreadCrumb(newRoute)
+      // this.setBreadCrumb(newRoute)
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
       this.$refs.sideMenu.updateOpenName(newRoute.name)
     }
@@ -153,13 +155,14 @@ export default {
     this.addTag({
       route: { name, params, query, meta }
     })
-    this.setBreadCrumb(this.$route)
+    // this.setBreadCrumb(this.$route)
     // 如果当前打开页面不在标签栏中，跳到homeName页
     if (!this.tagNavList.find(item => item.name === this.$route.name)) {
       this.$router.push({
         name: this.$config.homeName
       })
     }
+    particlesJS('particles', particlesConfig)
   }
 }
 </script>

@@ -8,6 +8,8 @@ import ViewUI from 'view-design'
 import config from '@/config'
 import './index.less'
 import '@/assets/icons/iconfont.css'
+import 'normalize.css'
+import 'reset-css'
 // 实际打包时应该不引入mock
 /* eslint-disable */
 // if (process.env.NODE_ENV !== 'production') require('@/mock')

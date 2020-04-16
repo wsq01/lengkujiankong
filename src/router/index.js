@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import routes from './routers'
 import store from '@/store'
 import ViewUI from 'view-design'
-import { setToken, getToken, canTurnTo, setTitle } from '@/libs/util'
+import { getToken, canTurnTo, setTitle } from '@/libs/util'
 import config from '@/config'
 const { homeName } = config
 
