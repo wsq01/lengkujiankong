@@ -40,7 +40,7 @@ export default {
   .custom-content-con{
     float: right;
     height: auto;
-    padding-right: 20px;
+    padding-right: 30px;
     line-height: 64px;
     & > *{
       float: right;
