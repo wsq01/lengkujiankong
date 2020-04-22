@@ -1,9 +1,39 @@
 <template>
   <div class="home">
-    <Row :gutter="20">
+    <Row :gutter="20" class="titletop">
+       <i-col :lg="8" :md="24" class="topleft">
+            <span class="cur-title">中集冷云</span>
+            <span>到期时间:2020-02-13 02:11:10 </span>
+       </i-col>
+       <i-col :lg="16" :md="24">
+         <div class="topright">
+    <Dropdown>
+       <Button type="primary">
+            基本信息
+            <Icon type="ios-arrow-down"></Icon>
+        </Button>
+        <DropdownMenu slot="list">
+            <DropdownItem>常用设置</DropdownItem>
+            <DropdownItem>报警信息</DropdownItem>
+            <DropdownItem>详细状态</DropdownItem>
+            <DropdownItem>参数设置</DropdownItem>
+            <DropdownItem>历史数据</DropdownItem>
+        </DropdownMenu>
+       </Dropdown>
+          <RadioGroup v-model="button1"  type="button">
+            <Radio label="关机"></Radio>
+            <Radio label="开机"></Radio>
+        </RadioGroup>
+           </div>
+       </i-col>
+    </Row>
+    <Row :gutter="20" class="lkstatistics">
       <i-col :lg="12" :md="24">
         <Card :bordered="false" class="card">
-          <p slot="title" class="title">冷库温度统计</p>
+          <p slot="title" class="title"><span>冷库温度统计</span> <span>2020-05-03</span></p>
+          <div class="modelbg">
+            <img src="../../assets/images/model@2x.png" class="modelimg" />
+          </div>
         </Card>
       </i-col>
       <i-col :lg="12" :md="24">
@@ -36,12 +66,13 @@ export default {
     return {
       lineChartOption: {},
       deviceDesc: {
-        num: '123',
+        num: '1234',
         name: 'xxxx',
         receiver: 'qqqq',
         type: 'a',
-        time: 'aaaa'
-      }
+        time: 'aaaa',
+      },
+       button1: '关机',
     }
   },
   components: {
@@ -141,6 +172,88 @@ export default {
 
 <style lang="less" scoped>
 @import "../../assets/styles/color.less";
+.titletop{
+  display: flex;
+  justify-items: center;
+  height: 40px;
+}
+.cur-title{
+  margin-right: 30px;
+  font-size: 16px;
+}
+.topleft{
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content:flex-start;
+}
+.topright{
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: flex-end;
+  .ivu-btn-primary {
+    color: #F1B81F;
+    background-color: #182E84;
+    border-color: #182E84;
+   }
+   .ivu-select-dropdown {
+    width: inherit;
+    max-height: 200px;
+    overflow: auto;
+    margin: 5px 0;
+    padding: 5px 0;
+    background-color:#182E84;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    z-index: 900;
+   }
+   .ivu-dropdown-item {
+    margin: 0;
+    line-height: normal;
+    padding: 7px 16px;
+    clear: both;
+    color: #A2E9FD;
+    font-size: 14px !important;
+    white-space: nowrap;
+    list-style: none;
+    cursor: pointer;
+    -webkit-transition: background 0.2s ease-in-out;
+    transition: background 0.2s ease-in-out;
+   }
+   .ivu-radio-wrapper{
+     background:#182E84 ;
+     color: #F1B81F;
+     border: none;
+   }
+     .ivu-radio-wrapper-checked{
+    border: none;
+     color: #A3FFFE;
+   }
+}
+.topright .ivu-btn{
+  margin: 0 15px;
+}
+.lkstatistics{
+  .title {
+   color: @my-text-color;
+   display: flex;
+   justify-content: space-between;
+  }
+  .modelbg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .modelbg .modelimg{
+    height: 273px;
+    width: auto;
+  }
+}
 .title {
   color: @my-text-color;
 }
@@ -148,6 +261,7 @@ export default {
   background: @sidebar-menu-bg-color;
   margin: 0 auto 20px;
 }
+
 .detail-list {
   color: #fff;
   font-size: 18px;
