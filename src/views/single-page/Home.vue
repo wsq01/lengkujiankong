@@ -3,7 +3,7 @@
     <Row :gutter="20" class="titletop">
        <i-col :lg="8" :md="24" class="topleft">
             <span class="cur-title">中集冷云</span>
-            <span>到期时间:2020-02-13 02:11:10 </span>
+            <span>到期时间:2020-02-13 </span>
        </i-col>
        <i-col :lg="16" :md="24">
          <div class="topright">
