@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <Row>
-        <Col span="12">col-12</Col>
-        <Col span="12">col-12</Col>
+        <Col span="12">12</Col>
+        <Col span="12">12</Col>
     </Row>
 
  
