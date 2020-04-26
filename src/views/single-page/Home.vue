@@ -51,15 +51,15 @@
       </i-col>
     </Row>
     <Row :gutter="20">
-      <i-col span="12" :md="12">
-        <my-card :bordered="false" class="card">
+      <i-col :lg="12" :md="24">
+        <my-card>
           <charts :option="lineChartOption" style="height: 350px"></charts>
         </my-card>
       </i-col>
-      <i-col span="12" :md="12">
-        <Card :bordered="false" class="card">
+      <i-col :lg="12" :md="24">
+        <my-card>
           <charts :option="BarChartOption" style="height: 350px"></charts>
-        </Card>
+        </my-card>
       </i-col>
     </Row>
   </div>
