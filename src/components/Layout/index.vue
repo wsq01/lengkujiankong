@@ -179,7 +179,7 @@ export default {
         name: this.$config.homeName
       })
     }
-    particlesJS('particles', particlesConfig)
+    // particlesJS('particles', particlesConfig) //背景动画
   }
 }
 </script>

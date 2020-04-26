@@ -3,7 +3,7 @@
     <Row :gutter="20" class="titletop">
       <i-col :lg="8" :md="24" class="topleft">
         <span class="cur-title">中集冷云</span>
-        <span>到期时间:2020-02-13 </span>
+        <span>到期时间:2020-02-13</span>
       </i-col>
       <i-col :lg="16" :md="24">
         <div class="topright">
@@ -50,11 +50,16 @@
         </my-card>
       </i-col>
     </Row>
-    <Row>
-      <i-col span="24">
+    <Row :gutter="20">
+      <i-col span="12" :md="12">
         <my-card :bordered="false" class="card">
           <charts :option="lineChartOption" style="height: 350px"></charts>
         </my-card>
+      </i-col>
+      <i-col span="12" :md="12">
+        <Card :bordered="false" class="card">
+          <charts :option="BarChartOption" style="height: 350px"></charts>
+        </Card>
       </i-col>
     </Row>
   </div>
@@ -69,6 +74,7 @@ export default {
   data () {
     return {
       lineChartOption: {},
+      BarChartOption: {},
       deviceDesc: {
         num: '1234',
         name: 'xxxx',
@@ -101,7 +107,7 @@ export default {
           textStyle: {
             color: '#A3FFFE'
           },
-          data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+          data: ['冷库', '风机', '报警']
         },
         grid: {
           left: '3%',
@@ -142,7 +148,7 @@ export default {
         },
         series: [
           {
-            name: '邮件营销',
+            name: '冷库',
             type: 'line',
             stack: '总量',
             symbol: 'none',
@@ -150,7 +156,7 @@ export default {
             data: [120, 132, 101, 134, 90, 230, 210]
           },
           {
-            name: '联盟广告',
+            name: '风机',
             type: 'line',
             stack: '总量',
             symbol: 'none',
@@ -158,7 +164,7 @@ export default {
             data: [220, 182, 191, 234, 290, 330, 310]
           },
           {
-            name: '视频广告',
+            name: '报警',
             type: 'line',
             stack: '总量',
             symbol: 'none',
@@ -167,14 +173,56 @@ export default {
           }
         ]
       }
+    },
+    barinit () {
+      this.BarChartOption = {
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data: [120, 200, 150, 80, 70, 110, 130],
+          type: 'bar'
+        }]
+      }
     }
   },
   mounted () {
     this.initLineChart()
+    this.barinit()
   }
 }
 </script>
 
+<style  lang="less">
+@import "../../assets/styles/color.less";
+.home .topright .ivu-dropdown-item {
+  background: #182E84;
+  color: @yellow-text-color;
+
+}
+.home .topright .ivu-dropdown-item:hover {
+  color: @yellow-text-color;
+}
+.topright .ivu-select-dropdown{
+  width: inherit;
+    max-height: 200px;
+    overflow: auto;
+    margin: 5px 0;
+    background:#182E84;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+      color: @white-color;
+    z-index: 900;
+    .ivu-dropdown-item{
+       color: @white-color;
+    }
+}
+</style>
 <style lang="less" scoped>
 @import "../../assets/styles/color.less";
 .titletop {
@@ -198,25 +246,11 @@ export default {
   align-items: center;
   justify-content: flex-end;
   .ivu-btn-primary {
-    color: #f1b81f;
+    color: @yellow-text-color;
     background-color: #182e84;
     border-color: #182e84;
   }
-  .ivu-select-dropdown {
-    width: inherit;
-    max-height: 200px;
-    overflow: auto;
-    margin: 5px 0;
-    padding: 5px 0;
-    background-color: #182e84;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    z-index: 900;
-  }
+  .ivu-dropdown{
   .ivu-dropdown-item {
     margin: 0;
     line-height: normal;
@@ -230,9 +264,10 @@ export default {
     -webkit-transition: background 0.2s ease-in-out;
     transition: background 0.2s ease-in-out;
   }
+   }
   .ivu-radio-wrapper {
     background: #182e84;
-    color: #f1b81f;
+    color: @yellow-text-color;
     border: none;
   }
   .ivu-radio-wrapper-checked {
@@ -258,6 +293,30 @@ export default {
     height: 273px;
     width: auto;
   }
+  .showtotal {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .cricleborder {
+      font-size: 24px;
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      color: @white-color;
+    }
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .itemdesc {
+        margin-top: 15px;
+        color: @white-color;
+      }
+    }
+  }
 }
 .title {
   color: @my-text-color;
@@ -271,7 +330,7 @@ export default {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    line-height: 40px;
+    line-height: 73px;
     margin: 0 auto 10px;
   }
 }
