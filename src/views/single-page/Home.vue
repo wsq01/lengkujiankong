@@ -36,6 +36,26 @@
           <div class="modelbg">
             <img src="../../assets/images/model@2x.png" class="modelimg" />
           </div>
+            <div class="showtotal">
+            <div class="item">
+              <i-circle :percent="80" stroke-color="#FFE167">
+                <span class="demo-Circle-inner cricleborder" style="font-size:24px">25℃</span>
+              </i-circle>
+              <span class="itemdesc">冷库温度</span>
+            </div>
+            <div class="item">
+              <i-circle :percent="80" stroke-color="#67E4FF">
+                <span class="demo-Circle-inner cricleborder" style="font-size:24px">85W</span>
+              </i-circle>
+              <span class="itemdesc">实时功率</span>
+            </div>
+            <div class="item">
+              <i-circle :percent="80" stroke-color="#67FF95">
+                <span class="demo-Circle-inner cricleborder" style="font-size:24px">无</span>
+              </i-circle>
+              <span class="itemdesc">报警情况</span>
+            </div>
+          </div>
         </my-card>
       </i-col>
       <i-col :lg="12" :md="24">
