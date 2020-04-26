@@ -1,58 +1,60 @@
 <template>
   <div class="home">
     <Row :gutter="20" class="titletop">
-       <i-col :lg="8" :md="24" class="topleft">
-            <span class="cur-title">中集冷云</span>
-            <span>到期时间:2020-02-13 </span>
-       </i-col>
-       <i-col :lg="16" :md="24">
-         <div class="topright">
-    <Dropdown>
-       <Button type="primary">
-            基本信息
-            <Icon type="ios-arrow-down"></Icon>
-        </Button>
-        <DropdownMenu slot="list">
-            <DropdownItem>常用设置</DropdownItem>
-            <DropdownItem>报警信息</DropdownItem>
-            <DropdownItem>详细状态</DropdownItem>
-            <DropdownItem>参数设置</DropdownItem>
-            <DropdownItem>历史数据</DropdownItem>
-        </DropdownMenu>
-       </Dropdown>
-          <RadioGroup v-model="button1"  type="button">
+      <i-col :lg="8" :md="24" class="topleft">
+        <span class="cur-title">中集冷云</span>
+        <span>到期时间:2020-02-13 </span>
+      </i-col>
+      <i-col :lg="16" :md="24">
+        <div class="topright">
+          <Dropdown>
+            <Button type="primary">
+              基本信息
+              <Icon type="ios-arrow-down"></Icon>
+            </Button>
+            <DropdownMenu slot="list">
+              <DropdownItem>常用设置</DropdownItem>
+              <DropdownItem>报警信息</DropdownItem>
+              <DropdownItem>详细状态</DropdownItem>
+              <DropdownItem>参数设置</DropdownItem>
+              <DropdownItem>历史数据</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+          <RadioGroup v-model="button1" type="button">
             <Radio label="关机"></Radio>
             <Radio label="开机"></Radio>
-        </RadioGroup>
-           </div>
-       </i-col>
+          </RadioGroup>
+        </div>
+      </i-col>
     </Row>
     <Row :gutter="20" class="lkstatistics">
       <i-col :lg="12" :md="24">
-        <Card :bordered="false" class="card">
-          <p slot="title" class="title"><span>冷库温度统计</span> <span>2020-05-03</span></p>
+        <my-card>
+          <p slot="title" class="title">
+            <span>冷库温度统计</span> <span>2020-05-03</span>
+          </p>
           <div class="modelbg">
             <img src="../../assets/images/model@2x.png" class="modelimg" />
           </div>
-        </Card>
+        </my-card>
       </i-col>
       <i-col :lg="12" :md="24">
-        <Card :bordered="false" class="card">
+        <my-card :bordered="false" class="card">
           <p class="title" slot="title">设备信息</p>
           <ul class="detail-list">
             <li v-for="(val, key) in deviceDesc" :key="key">
-              <span>{{key}}</span>
-              <span>{{val}}</span>
+              <div>{{ key }}</div>
+              <div>{{ val }}</div>
             </li>
           </ul>
-        </Card>
+        </my-card>
       </i-col>
     </Row>
     <Row>
       <i-col span="24">
-        <Card :bordered="false" class="card">
+        <my-card :bordered="false" class="card">
           <charts :option="lineChartOption" style="height: 350px"></charts>
-        </Card>
+        </my-card>
       </i-col>
     </Row>
   </div>
@@ -60,6 +62,8 @@
 
 <script>
 import Charts from '_c/Charts'
+import MyCard from '_c/MyCard'
+
 export default {
   name: 'Home',
   data () {
@@ -70,13 +74,14 @@ export default {
         name: 'xxxx',
         receiver: 'qqqq',
         type: 'a666',
-        time: 'aaaa',
+        time: 'aaaa'
       },
-       button1: '关机',
+      button1: '关机'
     }
   },
   components: {
-    Charts
+    Charts,
+    MyCard
   },
   methods: {
     initLineChart () {
@@ -172,38 +177,38 @@ export default {
 
 <style lang="less" scoped>
 @import "../../assets/styles/color.less";
-.titletop{
+.titletop {
   display: flex;
   justify-items: center;
   height: 40px;
 }
-.cur-title{
+.cur-title {
   margin-right: 30px;
   font-size: 16px;
 }
-.topleft{
+.topleft {
   display: flex;
   height: 40px;
   align-items: center;
-  justify-content:flex-start;
+  justify-content: flex-start;
 }
-.topright{
+.topright {
   display: flex;
   height: 40px;
   align-items: center;
   justify-content: flex-end;
   .ivu-btn-primary {
-    color: #F1B81F;
-    background-color: #182E84;
-    border-color: #182E84;
-   }
-   .ivu-select-dropdown {
+    color: #f1b81f;
+    background-color: #182e84;
+    border-color: #182e84;
+  }
+  .ivu-select-dropdown {
     width: inherit;
     max-height: 200px;
     overflow: auto;
     margin: 5px 0;
     padding: 5px 0;
-    background-color:#182E84;
+    background-color: #182e84;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border-radius: 4px;
@@ -211,45 +216,45 @@ export default {
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     position: absolute;
     z-index: 900;
-   }
-   .ivu-dropdown-item {
+  }
+  .ivu-dropdown-item {
     margin: 0;
     line-height: normal;
     padding: 7px 16px;
     clear: both;
-    color: #A2E9FD;
+    color: #a2e9fd;
     font-size: 14px !important;
     white-space: nowrap;
     list-style: none;
     cursor: pointer;
     -webkit-transition: background 0.2s ease-in-out;
     transition: background 0.2s ease-in-out;
-   }
-   .ivu-radio-wrapper{
-     background:#182E84 ;
-     color: #F1B81F;
-     border: none;
-   }
-     .ivu-radio-wrapper-checked{
+  }
+  .ivu-radio-wrapper {
+    background: #182e84;
+    color: #f1b81f;
     border: none;
-     color: #A3FFFE;
-   }
+  }
+  .ivu-radio-wrapper-checked {
+    border: none;
+    color: #a3fffe;
+  }
 }
-.topright .ivu-btn{
+.topright .ivu-btn {
   margin: 0 15px;
 }
-.lkstatistics{
+.lkstatistics {
   .title {
-   color: @my-text-color;
-   display: flex;
-   justify-content: space-between;
+    color: @my-text-color;
+    display: flex;
+    justify-content: space-between;
   }
   .modelbg {
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .modelbg .modelimg{
+  .modelbg .modelimg {
     height: 273px;
     width: auto;
   }
@@ -257,15 +262,11 @@ export default {
 .title {
   color: @my-text-color;
 }
-.card {
-  background: @sidebar-menu-bg-color;
-  margin: 0 auto 20px;
-}
 
 .detail-list {
   color: #fff;
   font-size: 18px;
-    padding: 0 20px;
+  padding: 0 20px;
   li {
     display: flex;
     justify-content: space-between;
