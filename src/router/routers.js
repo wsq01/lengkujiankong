@@ -27,7 +27,7 @@ export default [
   {
     path: '/',
     name: '_home',
-    redirect: '/zjly',
+    redirect: '/mian',
     component: Main,
     meta: {
       notCache: true,
@@ -35,6 +35,16 @@ export default [
       icon: 'md-home'
     },
     children: [
+      {
+        path: '/mian',
+        name: 'mian',
+        meta: {
+          title: '首页',
+          notCache: false,
+          icon: ''
+        },
+        component: () => import('@/views/single-page/Main.vue')
+      },
       {
         path: '/zjly',
         name: 'zjly',
