@@ -29,198 +29,172 @@
     </Row>
     <Row :gutter="20" class="lkstatistics">
       <i-col :lg="12" :md="24">
-        <Card :bordered="false" class="card">
+        <my-card>
           <p slot="title" class="title">
-            <span>冷库温度统计</span>
-            <span>2020-05-03</span>
+            <span>冷库温度统计</span> <span>2020-05-03</span>
           </p>
           <div class="modelbg">
             <img src="../../assets/images/model@2x.png" class="modelimg" />
           </div>
-          <div class="showtotal">
-            <div class="item">
-              <i-circle :percent="80" stroke-color="#FFE167">
-                <span class="demo-Circle-inner cricleborder" style="font-size:24px">25℃</span>
-              </i-circle>
-              <span class="itemdesc">冷库温度</span>
-            </div>
-            <div class="item">
-              <i-circle :percent="80" stroke-color="#67E4FF">
-                <span class="demo-Circle-inner cricleborder" style="font-size:24px">85W</span>
-              </i-circle>
-              <span class="itemdesc">实时功率</span>
-            </div>
-            <div class="item">
-              <i-circle :percent="80" stroke-color="#67FF95">
-                <span class="demo-Circle-inner cricleborder" style="font-size:24px">无</span>
-              </i-circle>
-              <span class="itemdesc">报警情况</span>
-            </div>
-          </div>
-        </Card>
+        </my-card>
       </i-col>
       <i-col :lg="12" :md="24">
-        <Card :bordered="false" class="card">
-          <p class="title" slot="title">
-            设备信息
-            <Circle :percent="35" stroke-color="#ff5500">
-              <span class="demo-circle-inner">
-                <Icon type="ios-close-empty" size="50" style="color:#ff5500"></Icon>
-              </span>
-            </Circle>
-          </p>
+        <my-card :bordered="false" class="card">
+          <p class="title" slot="title">设备信息</p>
           <ul class="detail-list">
             <li v-for="(val, key) in deviceDesc" :key="key">
-              <span>{{key}}</span>
-              <span>{{val}}</span>
+              <div>{{ key }}</div>
+              <div>{{ val }}</div>
             </li>
           </ul>
-        </Card>
+        </my-card>
       </i-col>
     </Row>
     <Row :gutter="20">
-      <i-col span="12" :md="12">
-        <Card :bordered="false" class="card">
+      <i-col :lg="12" :md="24">
+        <my-card>
           <charts :option="lineChartOption" style="height: 350px"></charts>
-        </Card>
+        </my-card>
       </i-col>
-      <i-col span="12" :md="12">
-        <Card :bordered="false" class="card">
+      <i-col :lg="12" :md="24">
+        <my-card>
           <charts :option="BarChartOption" style="height: 350px"></charts>
-        </Card>
+        </my-card>
       </i-col>
     </Row>
   </div>
 </template>
 
 <script>
-import Charts from "_c/Charts";
+import Charts from '_c/Charts'
+import MyCard from '_c/MyCard'
+
 export default {
-  name: "Home",
-  data() {
+  name: 'Home',
+  data () {
     return {
       lineChartOption: {},
       BarChartOption: {},
       deviceDesc: {
-        num: "1234",
-        name: "xxxx",
-        receiver: "qqqq",
-        type: "a666",
-        time: "aaaa"
+        num: '1234',
+        name: 'xxxx',
+        receiver: 'qqqq',
+        type: 'a666',
+        time: 'aaaa'
       },
-      button1: "关机"
-    };
+      button1: '关机'
+    }
   },
   components: {
-    Charts
+    Charts,
+    MyCard
   },
   methods: {
-    initLineChart() {
+    initLineChart () {
       this.lineChartOption = {
         title: {
-          text: "温度变化统计(单位°C)",
+          text: '温度变化统计(单位°C)',
           textStyle: {
-            color: "#A3FFFE"
+            color: '#A3FFFE'
           }
         },
         tooltip: {
-          trigger: "axis"
+          trigger: 'axis'
         },
         legend: {
-          right: "2%",
-          top: "2%",
+          right: '2%',
+          top: '2%',
           textStyle: {
-            color: "#A3FFFE"
+            color: '#A3FFFE'
           },
-          data: ["冷库", "风机", "报警"]
+          data: ['冷库', '风机', '报警']
         },
         grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
           containLabel: true
         },
         xAxis: {
-          type: "category",
+          type: 'category',
           splitLine: {
             show: false
           },
           axisLabel: {
             show: true,
             textStyle: {
-              color: "#A3FFFE",
+              color: '#A3FFFE',
               fontSize: 14
             }
           },
           boundaryGap: false,
-          data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
         },
         yAxis: {
-          type: "value",
+          type: 'value',
           splitLine: {
             show: true,
             lineStyle: {
-              color: "rgba(255, 255, 255, 0.1)"
+              color: 'rgba(255, 255, 255, 0.1)'
             }
           },
           axisLabel: {
             show: true,
             textStyle: {
-              color: "#A3FFFE",
+              color: '#A3FFFE',
               fontSize: 14
             }
           }
         },
         series: [
           {
-            name: "冷库",
-            type: "line",
-            stack: "总量",
-            symbol: "none",
+            name: '冷库',
+            type: 'line',
+            stack: '总量',
+            symbol: 'none',
             smooth: true,
             data: [120, 132, 101, 134, 90, 230, 210]
           },
           {
-            name: "风机",
-            type: "line",
-            stack: "总量",
-            symbol: "none",
+            name: '风机',
+            type: 'line',
+            stack: '总量',
+            symbol: 'none',
             smooth: true,
             data: [220, 182, 191, 234, 290, 330, 310]
           },
           {
-            name: "报警",
-            type: "line",
-            stack: "总量",
-            symbol: "none",
+            name: '报警',
+            type: 'line',
+            stack: '总量',
+            symbol: 'none',
             smooth: true,
             data: [150, 232, 201, 154, 190, 330, 410]
           }
         ]
-      };
+      }
     },
-    barinit(){
-this.BarChartOption = {
-    xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-        type: 'value'
-    },
-    series: [{
-        data: [120, 200, 150, 80, 70, 110, 130],
-        type: 'bar'
-    }]
-};
-
+    barinit () {
+      this.BarChartOption = {
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data: [120, 200, 150, 80, 70, 110, 130],
+          type: 'bar'
+        }]
+      }
     }
   },
-  mounted() {
-    this.initLineChart();
-    this.barinit();
+  mounted () {
+    this.initLineChart()
+    this.barinit()
   }
-};
+}
 </script>
 
 <style  lang="less">
@@ -238,7 +212,6 @@ this.BarChartOption = {
     max-height: 200px;
     overflow: auto;
     margin: 5px 0;
-  
     background:#182E84;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -301,7 +274,6 @@ this.BarChartOption = {
     border: none;
     color: #a3fffe;
   }
-
 }
 .topright .ivu-btn {
   margin: 0 15px;
@@ -348,10 +320,6 @@ this.BarChartOption = {
 }
 .title {
   color: @my-text-color;
-}
-.card {
-  background: @sidebar-menu-bg-color;
-  margin: 0 auto 20px;
 }
 
 .detail-list {
