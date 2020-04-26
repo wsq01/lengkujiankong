@@ -113,5 +113,13 @@ export default [
       hideInMenu: true
     },
     component: () => import('@/views/error-page/404.vue')
+  },
+  {
+    path: '/test',
+    name: 'test',
+    meta: {
+      hideInMenu: true
+    },
+    component: () => import('@/views/single-page/Test.vue')
   }
 ]
