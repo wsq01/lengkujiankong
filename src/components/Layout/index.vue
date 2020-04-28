@@ -55,7 +55,7 @@ import ABackTop from './components/BackTop'
 import Fullscreen from './components/FullScreen'
 import { mapMutations, mapActions } from 'vuex'
 import { getNewTagList, routeEqual } from '@/libs/util'
-import routers from '@/router/routers'
+import { defaultRoutes } from '@/router/routers'
 // import minLogo from '@/assets/images/logo@2x.png'
 import maxLogo from '@/assets/images/logo@2x.png'
 import minLogo from '@/assets/images/logozhedie.png'
@@ -165,7 +165,7 @@ export default {
      * @description 初始化设置面包屑导航和标签导航
      */
     this.setTagNavList()
-    this.setHomeRoute(routers)
+    this.setHomeRoute(defaultRoutes)
     const { name, params, query, meta } = this.$route
     this.addTag({
       route: { name, params, query, meta }

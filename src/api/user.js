@@ -44,26 +44,6 @@ const editItem = (url, params) => {
 }
 
 export const login = (params) => getItem('/csrc/sys/login', params)
-// 电流参数模型管理
-export const getElectric = (params) => getItem('/csrc/sys/electric', params)
-export const editElectric = (params) => editItem('/csrc/sys/electric', params)
-export const deleteElectric = (params) => deleteItem('/csrc/sys/electric', params)
-export const addElectric = (params) => addItem('/csrc/sys/electric', params)
-// 化霜参数模型管理
-export const getDefrosting = (id) => getItem('/csrc/sys/defrosting', params)
-export const editDefrosting = (params) => editItem('/csrc/sys/defrosting', params)
-export const deleteDefrosting = (id) => deleteItem('/csrc/sys/defrosting', params)
-export const addDefrosting = (params) => addItem('/csrc/sys/defrosting', params)
-// 温度参数模型管理
-export const getTemp = (params) => getItem('/csrc/sys/temp', params)
-export const editTemp = (params) => editItem('/csrc/sys/temp', params)
-export const deleteTemp = (params) => deleteItem('/csrc/sys/temp', params)
-export const addTemp = (params) => addItem('/csrc/sys/temp', params)
-// 压缩机参数模型管理
-export const getCompressor = (params) => getItem('/csrc/sys/compressor', params)
-export const editCompressor = (params) => editItem('/csrc/sys/compressor', params)
-export const deleteCompressor = (params) => deleteItem('/csrc/sys/compressor', params)
-export const addCompressor = (params) => addItem('/csrc/sys/compressor', params)
 // 按钮管理
 export const getButton = (params) => getItem('/csrc/sys/button', params)
 export const editButton = (params) => editItem('/csrc/sys/button', params)
@@ -76,6 +56,7 @@ export const deleteMenu = (params) => deleteItem('/csrc/sys/menu', params)
 export const addMenu = (params) => addItem('/csrc/sys/menu', params)
 // 仓库管理
 export const getStorage = (params) => getItem('/csrc/sys/storage', params)
+export const getStorageByUid = (params) => getItem('/csrc/sys/user/storage/' + params)
 export const editStorage = (params) => editItem('/csrc/sys/storage', params)
 export const deleteStorage = (params) => deleteItem('/csrc/sys/storage', params)
 export const addStorage = (params) => addItem('/csrc/sys/storage', params)
@@ -116,3 +97,5 @@ export const getUserRelRole = (params) => getItem('/csrc/sys/userRelRole', param
 export const editUserRelRole = (params) => editItem('/csrc/sys/userRelRole', params)
 export const deleteUserRelRole = (params) => deleteItem('/csrc/sys/userRelRole', params)
 export const addUserRelRole = (params) => addItem('/csrc/sys/userRelRole', params)
+// 菜单管理
+export const getMenus = (params) => getItem('/csrc/sys/menu', params)

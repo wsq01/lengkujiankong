@@ -14,7 +14,7 @@ import Main from '@/components/Layout/index.vue'
  * }
  */
 
-export default [
+export const defaultRoutes = [
   {
     path: '/login',
     name: 'login',
@@ -27,79 +27,25 @@ export default [
   {
     path: '/',
     name: '_home',
-    redirect: '/mian',
+    redirect: '/home',
     component: Main,
     meta: {
-      notCache: true,
-      title: '所有监控',
-      icon: 'md-home'
+      notCache: true
     },
     children: [
       {
-        path: '/mian',
-        name: 'mian',
+        path: '/home',
+        name: 'home',
         meta: {
+          // hideInMenu: true,
           title: '首页',
-          notCache: false,
-          icon: ''
+          notCache: true,
+          icon: 'md-home'
         },
         component: () => import('@/views/single-page/Main.vue')
-      },
-      {
-        path: '/zjly',
-        name: 'zjly',
-        meta: {
-          title: '中集冷云',
-          notCache: false,
-          icon: ''
-        },
-        component: () => import('@/views/single-page/Home.vue')
-      },
-      {
-        path: '/gywl',
-        name: 'gywl',
-        meta: {
-          title: '国药物流',
-          notCache: false,
-          icon: ''
-        },
-        component: () => import('@/views/single-page/Template.vue')
-      },
-      {
-        path: '/jxxn',
-        name: 'jxxn',
-        meta: {
-          title: '精新相能',
-          notCache: false,
-          icon: ''
-        },
-        component: () => import('@/views/single-page/Template.vue')
       }
     ]
   },
-  // {
-  //   path: '/',
-  //   name: '_home',
-  //   redirect: '/home',
-  //   component: Main,
-  //   meta: {
-  //     hideInMenu: true,
-  //     notCache: true
-  //   },
-  //   children: [
-  //     {
-  //       path: '/home',
-  //       name: 'home',
-  //       meta: {
-  //         hideInMenu: true,
-  //         title: '首页',
-  //         notCache: true,
-  //         icon: 'md-home'
-  //       },
-  //       component: () => import('@/views/single-page/Home.vue')
-  //     }
-  //   ]
-  // },
   {
     path: '/401',
     name: 'error_401',
@@ -123,13 +69,18 @@ export default [
       hideInMenu: true
     },
     component: () => import('@/views/error-page/404.vue')
-  },
+  }
+]
+export const asyncRoutes = [
   {
-    path: '/test',
-    name: 'test',
+    path: '/monitor',
+    name: '_monitor',
+    component: Main,
     meta: {
-      hideInMenu: true
+      notCache: true,
+      title: '所有监控',
+      icon: 'md-home'
     },
-    component: () => import('@/views/single-page/Test.vue')
+    children: []
   }
 ]

@@ -1,36 +1,23 @@
 <template>
   <div class="main">
-    <Row>
-        <Col span="12">12</Col>
-        <Col span="12">12</Col>
-    </Row>
-
- 
+    首页
   </div>
 </template>
 
 <script>
-import Charts from "_c/Charts";
+// import Charts from '_c/Charts'
 export default {
-  name: "Main",
-  data() {
-    return {
-    
-    };
+  name: 'Main',
+  data () {
+    return {}
   },
   components: {
-    Charts
+    // Charts
   },
-  methods: {
-  },
-  mounted() {
-  }
-};
+  methods: {},
+  mounted () {}
+}
 </script>
 
-<style  lang="less">
-
-</style>
-<style lang="less" scoped>
-
-</style>
+<style lang="less"></style>
+<style lang="less" scoped></style>

@@ -15,44 +15,44 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex'
 export default {
-  name: "User",
+  name: 'User',
   props: {
     userAvatar: {
       type: String,
-      default: ""
+      default: ''
     }
   },
   methods: {
-    ...mapActions(["handleLogOut"]),
-    logout() {
+    ...mapActions(['handleLogOut']),
+    logout () {
       this.$Modal.confirm({
-        title: "提示",
-        content: "<p>请确定是否要注销登录</p>",
+        title: '提示',
+        content: '<p>请确定是否要注销登录</p>',
         loading: true,
         onOk: () => {
           setTimeout(() => {
             this.handleLogOut().then(() => {
               this.$router.push({
-                name: "login"
-              });
-            });
-            this.$Modal.remove();
-            this.$Message.info("注销成功");
-          }, 2000);
+                name: 'login'
+              })
+            })
+            this.$Modal.remove()
+            this.$Message.info('注销成功')
+          }, 2000)
         }
-      });
+      })
     },
-    handleClick(name) {
+    handleClick (name) {
       switch (name) {
-        case "logout":
-          this.logout();
-          break;
+        case 'logout':
+          this.logout()
+          break
       }
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

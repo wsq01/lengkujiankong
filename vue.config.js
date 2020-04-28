@@ -18,7 +18,7 @@ const BASE_URL = process.env.NODE_ENV === 'production'
 module.exports = {
   lintOnSave: false,
   publicPath: BASE_URL,
-  // 如果你不需要使用eslint，把lintOnSave设为false即可
+  // eslint-disable-next-line no-dupe-keys
   lintOnSave: true,
   chainWebpack: config => {
     config.resolve.alias
@@ -28,7 +28,7 @@ module.exports = {
   css: {
     loaderOptions: {
       less: {
-        javascriptEnabled: true,
+        javascriptEnabled: true
       }
     }
   },
@@ -37,12 +37,9 @@ module.exports = {
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   devServer: {
     overlay: {
-        warnings: false,
-        errors: false
-    },
-  
-},
+      warnings: false,
+      errors: false
+    }
 
-
-lintOnSave: false
+  }
 }

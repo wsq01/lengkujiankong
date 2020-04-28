@@ -213,6 +213,7 @@ export default {
   mounted () {
     this.initLineChart()
     this.barinit()
+    console.log(this.$route)
   }
 }
 </script>

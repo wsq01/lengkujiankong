@@ -15,10 +15,8 @@ html,body{
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background: #200853;
 }
 #app {
   .size;
-  background: #200853; 
 }
 </style>

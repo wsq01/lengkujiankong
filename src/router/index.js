@@ -1,23 +1,41 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import routes from './routers'
+import { defaultRoutes, asyncRoutes } from './routers'
 import store from '@/store'
 import ViewUI from 'view-design'
-import { getToken, canTurnTo, setTitle } from '@/libs/util'
+import { getToken, setToken, canTurnTo, setTitle, initAsyncRouter } from '@/libs/util'
 import config from '@/config'
 const { homeName } = config
 
 Vue.use(Router)
 const router = new Router({
-  routes,
-  mode: 'history'
+  routes: defaultRoutes,
+  base: process.env.BASE_URL,
+  mode: 'hash'
 })
 const LOGIN_PAGE_NAME = 'login'
-
+console.log(router)
 const turnTo = (to, access, next) => {
-  if (canTurnTo(to.name, access, routes)) next() // 有权限，可访问
-  //else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
-  else next({ replace: true, name: 'zjly' })
+  if (canTurnTo(to.name, access, defaultRoutes)) next() // 有权限，可访问
+  else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
+}
+const initStorage = (routers, storages) => {
+  routers.forEach(item => {
+    if (item.name === '_monitor') {
+      storages.forEach((sItem, sIndex) => {
+        item.children.push({
+          name: `_storage_${sItem.storageId}`,
+          path: `/storage/${sItem.storageId}`,
+          meta: {
+            title: sItem.storageName,
+            notCache: false
+          },
+          component: () => import('@/views/single-page/Home.vue')
+        })
+      })
+    }
+  })
+  return routers
 }
 
 router.beforeEach((to, from, next) => {
@@ -37,19 +55,33 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    turnTo(to, store.state.user.access, next)
-    // if (store.state.user.hasGetInfo) {
-    // } else {
-    //   turnTo(to, tore.state.user.access, next)
-    //   store.dispatch('getUserInfo').then(user => {
-    //     // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
-    //   }).catch(() => {
-    //     setToken('')
-    //     next({
-    //       name: 'login'
-    //     })
-    //   })
-    // }
+    if (store.state.user.hasGetInfo) {
+      turnTo(to, store.state.user.access, next)
+    } else {
+      store.dispatch('getMenus').then(res => {
+        if (res[0]) {
+          if (res[0].data && res[0].data.code === 1200) {
+            alert(res[0].data.message)
+          }
+          let asyncRouters = initAsyncRouter(res[0].data.data.list, asyncRoutes)
+          console.log(asyncRouters)
+          store.dispatch('getStorage').then(res => {
+            console.log(res)
+            asyncRouters = initStorage(asyncRouters, res)
+            asyncRouters.forEach(item => router.options.routes.push(item))
+            router.addRoutes(asyncRouters)
+            console.log(router)
+            turnTo(to, store.state.user.access, next)
+          })
+        }
+      }).catch((res) => {
+        setToken('')
+        // Cookies.remove('organizationId')
+        next({
+          name: LOGIN_PAGE_NAME
+        })
+      })
+    }
   }
 })
 

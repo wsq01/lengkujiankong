@@ -10,7 +10,8 @@ import {
   getRouteTitleHandled
 } from '@/libs/util'
 import router from '@/router'
-import routers from '@/router/routers'
+import { defaultRoutes } from '@/router/routers'
+
 import config from '@/config'
 const { homeName } = config
 
@@ -26,10 +27,11 @@ export default {
   state: {
     breadCrumbList: [],
     tagNavList: [],
-    homeRoute: {}
+    homeRoute: {},
+    menuList: []
   },
   getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access)
+    menuList: (state, getters, rootState) => getMenuByRouter(defaultRoutes, rootState.user.access)
   },
   mutations: {
     setBreadCrumb (state, route) {
@@ -68,6 +70,9 @@ export default {
         }
         setTagNavListInLocalstorage([...state.tagNavList])
       }
+    },
+    setMenuList (state, list) {
+      state.menuList = list
     }
   },
   actions: {

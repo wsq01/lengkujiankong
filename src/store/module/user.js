@@ -1,4 +1,4 @@
-import { login } from '@/api/user'
+import { login, getMenus, getStorageByUid } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
 
 export default {
@@ -6,7 +6,10 @@ export default {
     avatarImgPath: 'https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png',
     token: getToken(),
     access: ['super_admin', 'admin'],
-    userInfo: []
+    userInfo: {},
+    userMenu: [],
+    hasGetInfo: false,
+    storages: []
   },
   mutations: {
     setAvatar (state, avatarPath) {
@@ -21,6 +24,15 @@ export default {
     },
     setUserInfo (state, info) {
       state.userInfo = info
+    },
+    setUserMenu (state, list) {
+      state.userMenu = list
+    },
+    setHasGetInfo (state, status) {
+      state.hasGetInfo = status
+    },
+    setStorage (state, storages) {
+      state.storages = storages
     }
   },
   getters: {},
@@ -36,8 +48,10 @@ export default {
         }).then((res) => {
           console.log(res)
           if (res.data && res.data.code === 0) {
-            commit('setUserInfo', res.data.data.role)
+            commit('setUserInfo', res.data.data)
             commit('setToken', res.data.data.jwt)
+            sessionStorage.setItem('userId', JSON.stringify(res.data.data.userId))
+            sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.role))
           }
           resolve(res)
         }).catch((err) => {
@@ -59,6 +73,36 @@ export default {
         commit('setToken', '')
         commit('setAccess', [])
         resolve()
+      })
+    },
+    getMenus ({ state, commit }) {
+      const roleIds = JSON.parse(sessionStorage.getItem('userInfo'))
+      return new Promise((resolve, reject) => {
+        try {
+          const promises = roleIds.map(item => getMenus({ roleId: item.roleId }))
+          Promise.all(promises).then(res => {
+            console.log(res)
+            commit('setHasGetInfo', true)
+            commit('setUserMenu', res[0].data.data.list)
+            resolve(res)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    getStorage ({ state, commit }) {
+      let uid = sessionStorage.getItem('userId')
+      uid = uid.slice(1, uid.length - 1)
+      return new Promise((resolve, reject) => {
+        try {
+          getStorageByUid(uid).then(res => {
+            commit('setStorage', res.data.list)
+            resolve(res.data.data.list)
+          })
+        } catch (error) {
+          reject(error)
+        }
       })
     }
   }

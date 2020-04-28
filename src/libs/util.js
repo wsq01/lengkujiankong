@@ -344,3 +344,25 @@ export const setTitle = (routeItem, vm) => {
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
 }
+export const initAsyncRouter = (menuList, routers) => {
+  const result = []
+  let offs1 = false // eslint-disable-line no-unused-vars
+  routers.forEach((route, rIndex) => {
+    menuList.forEach((menu, mIndex) => {
+      if (menu.uri !== route.path && route.children && route.children.length !== 0) {
+        route.children.forEach((sItem, sIndex) => {
+          if (menu.uri === sItem.path) {
+            sItem.meta.hideInMenu = false
+            offs1 = true
+          }
+        })
+      }
+      if (menu.uri === route.path) {
+        offs1 = true
+      }
+    })
+    result.push(route)
+    offs1 = false
+  })
+  return result
+}
