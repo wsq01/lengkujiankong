@@ -71,6 +71,12 @@ export const getDeviceBySN = (params) => getItem('/csrc/sys/device/SN', params)
 export const editDevice = (params) => editItem('/csrc/sys/device', params)
 export const deleteDevice = (params) => deleteItem('/csrc/sys/device', params)
 export const addDevice = (params) => addItem('/csrc/sys/roldevicee', params)
+// 设备参数管理
+export const getDeviceModel = (params) => getItem('/csrc/sys/deviceModel', params)
+export const editDeviceModel = (params) => editItem('/csrc/sys/deviceModel', params)
+export const deleteDeviceModel = (params) => deleteItem('/csrc/sys/deviceModel', params)
+export const addDeviceModel = (params) => addItem('/csrc/sys/deviceModel', params)
+export const addDeviceModelByExtra = (params) => addItem('/csrc/sys/deviceModel/extra', params)
 // 用户管理
 export const getUser = (params) => getItem('/csrc/sys/user', params)
 export const getUserByInfo = (params) => getItem('/csrc/sys/user/info', params)

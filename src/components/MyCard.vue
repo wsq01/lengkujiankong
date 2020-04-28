@@ -1,21 +1,24 @@
 <template>
-  <div>
-    <Card :bordered="false" class="card">
-      <i></i>
-      <i></i>
-      <i></i>
-      <i></i>
-      <div slot="name">
-        <slot name="name"></slot>
-      </div>
-      <slot></slot>
-    </Card>
-  </div>
+  <Card :bordered="false" class="card">
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <div slot="title" v-if="isShowTitle">
+      <slot name="title"></slot>
+    </div>
+    <slot></slot>
+  </Card>
 </template>
 
 <script>
 export default {
-
+  props: {
+    isShowTitle: {
+      type: Boolean,
+      defalut: false
+    }
+  }
 }
 </script>
 
@@ -24,7 +27,7 @@ export default {
 
 .card {
   background: @sidebar-menu-bg-color;
-  margin: 0 auto 20px;
+  margin: 10px auto 10px;
   position: relative;
 }
 .card i:nth-of-type(1) {

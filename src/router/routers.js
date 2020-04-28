@@ -42,7 +42,18 @@ export const defaultRoutes = [
           notCache: true,
           icon: 'md-home'
         },
-        component: () => import('@/views/single-page/Main.vue')
+        component: () => import('@/views/single-page/Home.vue')
+      },
+      {
+        path: '/device',
+        name: 'device',
+        meta: {
+          hideInMenu: true,
+          title: '设备详情',
+          notCache: true,
+          icon: 'md-home'
+        },
+        component: () => import('@/views/single-page/Device.vue')
       }
     ]
   },

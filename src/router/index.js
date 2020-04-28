@@ -30,7 +30,7 @@ const initStorage = (routers, storages) => {
             title: sItem.storageName,
             notCache: false
           },
-          component: () => import('@/views/single-page/Home.vue')
+          component: () => import('@/views/single-page/Storage.vue')
         })
       })
     }
@@ -64,13 +64,10 @@ router.beforeEach((to, from, next) => {
             alert(res[0].data.message)
           }
           let asyncRouters = initAsyncRouter(res[0].data.data.list, asyncRoutes)
-          console.log(asyncRouters)
           store.dispatch('getStorage').then(res => {
-            console.log(res)
             asyncRouters = initStorage(asyncRouters, res)
             asyncRouters.forEach(item => router.options.routes.push(item))
             router.addRoutes(asyncRouters)
-            console.log(router)
             turnTo(to, store.state.user.access, next)
           })
         }
