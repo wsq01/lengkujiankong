@@ -16,6 +16,7 @@ html,body{
   margin: 0;
   padding: 0;
   background: #200853;
+  letter-spacing: 1px;
 }
 #app {
   .size;

@@ -43,7 +43,8 @@ export default [
           notCache: false,
           icon: ''
         },
-        component: () => import('@/views/single-page/Main.vue')
+        component: () => import('@/views/single-page/Main.vue'),
+
       },
       {
         path: '/zjly',
@@ -53,7 +54,7 @@ export default [
           notCache: false,
           icon: ''
         },
-        component: () => import('@/views/single-page/Home.vue')
+        component: () => import('@/views/single-page/Home.vue'),        
       },
       {
         path: '/gywl',
@@ -74,6 +75,36 @@ export default [
           icon: ''
         },
         component: () => import('@/views/single-page/Template.vue')
+      },
+      {
+        path: '/commonset',
+        name: 'commonset',
+        meta: {
+          title: '常用设置',
+          notCache: false,
+          icon: ''
+        },
+        component: () => import('@/views/single-page/CommonSet.vue')
+      },
+      {
+        path: '/warnset',
+        name: 'warnset',
+        meta: {
+          title: '报警信息',
+          notCache: false,
+          icon: ''
+        },
+        component: () => import('@/views/single-page/Warn.vue')
+      },
+      {
+        path: '/descstate',
+        name: 'descstate',
+        meta: {
+          title: '详细状态',
+          notCache: false,
+          icon: ''
+        },
+        component: () => import('@/views/single-page/DescState.vue')
       }
     ]
   },
