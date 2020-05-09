@@ -35,6 +35,7 @@
           <div class="tag-nav-wrapper" v-show="false">
             <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
           </div>
+          <top-menu :selectedMenu="selectedMenu" v-if="isShowTopMenu"></top-menu>
           <Content class="content-wrapper">
             <keep-alive :include="cacheList">
               <router-view/>
@@ -53,6 +54,7 @@ import TagsNav from './components/TagsNav'
 import User from './components/User'
 import ABackTop from './components/BackTop'
 import Fullscreen from './components/FullScreen'
+import TopMenu from './components/TopMenu'
 import { mapMutations, mapActions } from 'vuex'
 import { getNewTagList, routeEqual } from '@/libs/util'
 import { defaultRoutes } from '@/router/routers'
@@ -70,7 +72,8 @@ export default {
     TagsNav,
     Fullscreen,
     User,
-    ABackTop
+    ABackTop,
+    TopMenu
   },
   data () {
     return {
@@ -79,7 +82,9 @@ export default {
       sdierBgColor: '#001529',
       minLogo,
       maxLogo,
-      isFullscreen: false
+      isFullscreen: false,
+      isShowTopMenu: false,
+      selectedMenu: 'device'
     }
   },
   computed: {
@@ -146,15 +151,21 @@ export default {
     },
     handleClick (item) {
       this.turnToPage(item)
+    },
+    handleShowTopMenu (name) {
+      this.isShowTopMenu = name === 'device' || name === 'deviceSetting' || name === 'deviceAlarm' || name === 'deviceDetail' || name === 'deviceModel' || name === 'deviceHistory'
+      this.selectedMenu = name
     }
   },
   watch: {
     '$route' (newRoute) {
+      console.log(newRoute)
       const { name, query, params, meta } = newRoute
       this.addTag({
         route: { name, query, params, meta },
         type: 'push'
       })
+      this.handleShowTopMenu(name)
       // this.setBreadCrumb(newRoute)
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
       this.$refs.sideMenu.updateOpenName(newRoute.name)
@@ -167,6 +178,7 @@ export default {
     this.setTagNavList()
     this.setHomeRoute(defaultRoutes)
     const { name, params, query, meta } = this.$route
+    this.handleShowTopMenu(name)
     this.addTag({
       route: { name, params, query, meta }
     })

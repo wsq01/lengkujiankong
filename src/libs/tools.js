@@ -213,3 +213,14 @@ export const objEqual = (obj1, obj2) => {
   /* eslint-disable-next-line */
   else return !keysArr1.some(key => obj1[key] != obj2[key])
 }
+export const debounce = (fn, delay) => {
+  // 记录上一次的延时器
+  var timer = null
+  return () => {
+    // 清除上一次延时器
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this, arguments)
+    }, delay)
+  }
+}

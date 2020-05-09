@@ -28,7 +28,8 @@ export default {
     breadCrumbList: [],
     tagNavList: [],
     homeRoute: {},
-    menuList: []
+    menuList: [],
+    deviceId: ''
   },
   getters: {
     menuList: (state, getters, rootState) => getMenuByRouter(defaultRoutes, rootState.user.access)
@@ -73,6 +74,9 @@ export default {
     },
     setMenuList (state, list) {
       state.menuList = list
+    },
+    setDeviceId (state, deviceId) {
+      state.deviceId = deviceId
     }
   },
   actions: {

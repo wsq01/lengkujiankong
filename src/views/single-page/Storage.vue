@@ -22,6 +22,7 @@
 <script>
 import MyCard from '_c/MyCard'
 import { getDevice } from '@/api/user'
+import { mapMutations, mapState } from 'vuex'
 export default {
   name: 'Storage',
   data () {
@@ -33,7 +34,13 @@ export default {
   components: {
     MyCard
   },
+  computed: {
+    ...mapState(['storages'])
+  },
   methods: {
+    ...mapMutations([
+      'setDeviceId'
+    ]),
     async getDevice () {
       const params = { storageId: this.storageId }
       const res = await getDevice(params)
@@ -43,6 +50,7 @@ export default {
       }
     },
     toDeviceDetail (deviceId) {
+      this.setDeviceId(deviceId)
       this.$router.push({
         name: 'device',
         params: { deviceId }
@@ -50,8 +58,8 @@ export default {
     }
   },
   created () {
-    console.log(this.$route)
-    this.storageId = this.$route.path.split('/')[2]
+    // console.log(this.$store)
+    // this.storageId = this.$route.path.split('/')[2]
     this.getDevice()
   }
 }

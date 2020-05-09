@@ -38,26 +38,14 @@ export default {
   getters: {},
   actions: {
     // 登录
-    handleLogin ({ commit }, { userName, password }) {
-      userName = userName.trim()
-      const username = userName
-      return new Promise((resolve, reject) => {
-        login({
-          username,
-          password
-        }).then((res) => {
-          console.log(res)
-          if (res.data && res.data.code === 0) {
-            commit('setUserInfo', res.data.data)
-            commit('setToken', res.data.data.jwt)
-            sessionStorage.setItem('userId', JSON.stringify(res.data.data.userId))
-            sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.role))
-          }
-          resolve(res)
-        }).catch((err) => {
-          reject(err)
-        })
-      })
+    async handleLogin ({ commit }, { userName, password }) {
+      const res = await login({ username: userName.trim(), password })
+      if (res.data && res.data.code === 0) {
+        commit('setUserInfo', res.data.data)
+        commit('setToken', res.data.data.jwt)
+        sessionStorage.setItem('userInfo', JSON.stringify(res.data.data))
+      }
+      return res
     },
     // 退出登录
     handleLogOut ({ state, commit }) {
@@ -75,35 +63,28 @@ export default {
         resolve()
       })
     },
-    getMenus ({ state, commit }) {
-      const roleIds = JSON.parse(sessionStorage.getItem('userInfo'))
-      return new Promise((resolve, reject) => {
-        try {
-          const promises = roleIds.map(item => getMenus({ roleId: item.roleId }))
-          Promise.all(promises).then(res => {
-            console.log(res)
-            commit('setHasGetInfo', true)
-            commit('setUserMenu', res[0].data.data.list)
-            resolve(res)
-          })
-        } catch (error) {
-          reject(error)
+    async getMenus ({ dispatch, commit }) {
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      try {
+        const res = await getMenus({ roleId: userInfo.role[0].roleId })
+        if (res.data && res.data.code === 0) {
+          await dispatch('getStorage')
+          commit('setHasGetInfo', true)
+          commit('setUserMenu', res.data.data.list)
         }
-      })
+        return res
+      } catch (error) {
+        console.log(error)
+      }
     },
-    getStorage ({ state, commit }) {
-      let uid = sessionStorage.getItem('userId')
-      uid = uid.slice(1, uid.length - 1)
-      return new Promise((resolve, reject) => {
-        try {
-          getStorageByUid(uid).then(res => {
-            commit('setStorage', res.data.list)
-            resolve(res.data.data.list)
-          })
-        } catch (error) {
-          reject(error)
-        }
-      })
+    async getStorage ({ state, commit }) {
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      try {
+        const res = await getStorageByUid(userInfo.userId)
+        commit('setStorage', res.data.data.list)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

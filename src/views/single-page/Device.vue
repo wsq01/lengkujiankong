@@ -1,20 +1,5 @@
 <template>
   <div>
-    <Row :gutter="20" type="flex" justify="space-between" align="middle">
-      <i-col :span="16">中集冷云</i-col>
-      <i-col :span="8">
-          <RadioGroup style="float: right" v-model="switchBtn" type="button">
-            <Radio label="关机"></Radio>
-            <Radio label="开机"></Radio>
-          </RadioGroup>
-          <Dropdown style="float: right">
-            <Button type="primary">{{dropdownMenuOptions.title}}<Icon type="ios-arrow-down"></Icon></Button>
-            <DropdownMenu slot="list">
-              <DropdownItem v-for="(item, index) in dropdownMenuOptions.list" :key="index">{{item}}</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-      </i-col>
-    </Row>
     <Row :gutter="20" class="lkstatistics">
       <i-col :lg="12" :md="24">
         <my-card>
@@ -47,7 +32,7 @@
         </my-card>
       </i-col>
       <i-col :lg="12" :md="24">
-        <my-card :bordered="false" :isShowTitle="true">
+        <my-card :isShowTitle="true">
           <p class="title" slot="title">{{ deviceDesc.title }}</p>
           <ul class="detail-list">
             <li v-for="(item, index) in deviceDesc.desc" :key="index">
@@ -82,13 +67,7 @@ export default {
   name: 'Device',
   data () {
     return {
-      deviceId: '',
       deviceModel: [],
-      switchBtn: '开机',
-      dropdownMenuOptions: {
-        title: '基本信息',
-        list: ['常用设置', '报警信息', '详细状态', '参数设置', '历史数据']
-      },
       lineChartOption: {},
       BarChartOption: {},
       deviceDesc: {
@@ -103,6 +82,7 @@ export default {
       }
     }
   },
+  props: ['deviceId'],
   components: {
     Charts,
     MyCard
@@ -237,8 +217,7 @@ export default {
   mounted () {
     this.initLineChart()
     this.barinit()
-    // this.deviceId = this.$route.params.deviceId
-    this.deviceId = '100000000005'
+    // this.deviceId = this.$store.state.app.deviceId
     this.getDevice()
     this.getDeviceModel()
   }
