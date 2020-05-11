@@ -1,13 +1,13 @@
 <template>
   <div>
     <Row :gutter="20" type="flex" justify="space-between" align="middle">
-      <i-col :span="16">中集冷云</i-col>
+      <!-- <i-col :span="16">中集冷云</i-col> -->
       <i-col :span="8">
-        <RadioGroup style="float: right" v-model="switchBtn" type="button">
+        <!-- <RadioGroup style="float: right" v-model="switchBtn" type="button">
           <Radio label="关机"></Radio>
           <Radio label="开机"></Radio>
-        </RadioGroup>
-        <Dropdown style="float: right">
+        </RadioGroup> -->
+        <!-- <Dropdown style="float: right">
           <Button type="primary">
             {{dropdownMenuOptions.title}}
             <Icon type="ios-arrow-down"></Icon>
@@ -15,7 +15,7 @@
           <DropdownMenu slot="list">
             <DropdownItem v-for="(item, index) in dropdownMenuOptions.list" :key="index">{{item}}</DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown> -->
       </i-col>
     </Row>
     <Row :gutter="20" class="lkstatistics">
