@@ -41,7 +41,7 @@ export default {
 };
 </script>
 <style lang="less">
-.ivu-input-group .ivu-input {
+.login .ivu-input-group .ivu-input {
   height: 48px;
   color: #0e1fa3;
   font-size: 14px;

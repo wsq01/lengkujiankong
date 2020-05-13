@@ -86,7 +86,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           if(this.form.code!==this.form.identifyCode){
-            this.$Message.error('验证码错误');
+            this.$Message.error('验证码错误,请注意字符小大写！');
+            this.form.identifyCode = "";
+           this.makeCode(this.identifyCodes, 4);
             return false;
           }
           this.$emit("on-success-valid", {
@@ -110,13 +112,13 @@ export default {
           this.randomNum(0, this.identifyCodes.length)
         ];
       }
-      console.log(this.form.identifyCode);
+      //console.log(this.form.identifyCode);
     }
   }
 };
 </script>
 <style lang="less">
-.ivu-form-item-content {
+.clogin .ivu-form-item-content {
   display: flex;
   justify-content: space-between;
   width: 100%;
