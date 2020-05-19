@@ -2,14 +2,14 @@
   <div class="user-avatar-dropdown">
     <Dropdown @on-click="handleClick">
       <Avatar :src="userAvatar" />
-      <span class="username">admin</span>
+      <span class="username">{{userName}}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
 
-      <!-- <DropdownMenu slot="list">
+      <DropdownMenu slot="list">
+        <DropdownItem v-if="!off" name="authority">权限管理</DropdownItem>
+        <DropdownItem v-else name="storage">仓库管理</DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
-      </DropdownMenu>-->
-      <Icon type="md-notifications" size="20" />
-      <Icon type="md-power" size="20" @click="logout" />
+      </DropdownMenu>
     </Dropdown>
   </div>
 </template>
@@ -18,14 +18,27 @@
 import { mapActions } from 'vuex'
 export default {
   name: 'User',
+  data () {
+    return {
+      userName: '',
+      off: false
+    }
+  },
   props: {
     userAvatar: {
       type: String,
       default: ''
     }
   },
+  mounted () {
+    this.userName = JSON.parse(sessionStorage.getItem('userInfo')).role[0].roleName
+  },
   methods: {
     ...mapActions(['handleLogOut']),
+    handleSelect (name) { // 选择菜单（MenuItem）时触发
+      this.off = !this.off
+      this.$emit('on-select-top', name)
+    },
     logout () {
       this.$Modal.confirm({
         title: '提示',
@@ -46,6 +59,12 @@ export default {
     },
     handleClick (name) {
       switch (name) {
+        case 'authority':
+          this.handleSelect(name)
+          break
+        case 'storage':
+          this.handleSelect(name)
+          break
         case 'logout':
           this.logout()
           break
@@ -60,9 +79,7 @@ export default {
   &-avatar-dropdown {
     cursor: pointer;
     display: inline-block;
-    // height: 64px;
     vertical-align: middle;
-    // line-height: 64px;
     .ivu-badge-dot {
       top: 16px;
     }

@@ -1,7 +1,7 @@
 <template>
   <Row :gutter="20" type="flex" justify="end" align="middle" class="top-menu">
     <i-col :span="23">
-      <RadioGroup v-model="switchBtn" type="button" style="float: right">
+      <RadioGroup v-model="switchBtn" type="button" class="my-radio-group" style="float: right">
         <Radio label="关机"></Radio>
         <Radio label="开机"></Radio>
       </RadioGroup>
@@ -22,9 +22,9 @@ export default {
         { label: '设备信息', value: 'device' },
         // { label: '常用设置', value: 'deviceSetting' },
         { label: '参数设置', value: 'deviceDetail' },
-        { label: '报警信息', value: 'deviceAlarm' },
+        { label: '报警管理', value: 'deviceAlarm' },
         // { label: '参数设置', value: 'deviceModel' },
-        { label: '历史数据', value: 'deviceHistory' }
+        { label: '数据管理', value: 'deviceHistory' }
       ],
       selectedItem: 'device'
     }
@@ -61,6 +61,17 @@ export default {
   .ivu-select-dropdown {
     background: rgba(24, 46, 132, 1);
     max-height: fit-content;
+  }
+}
+.my-radio-group {
+  label.ivu-radio-wrapper {
+    background: transparent;
+    border-color: #2d8cf0;
+    border-left: 1px solid #2d8cf0 !important;
+  }
+  label.ivu-radio-wrapper-checked {
+    background: rgba(24, 46, 132, 1);
+    color: rgba(241, 184, 31, 1);
   }
 }
 </style>

@@ -6,12 +6,15 @@
           <FormItem>
             <Select v-model="searchForm.key">
               <template v-for="item in columns">
-                <Option v-if="item.key && item.key !== 'remark'" :value="item.key" :key="`search-${item.key}`">{{item.title}}</Option>
+                <Option v-if="item.key && item.key === 'deviceId'" :value="item.key" :key="`search-${item.key}`">{{item.title}}</Option>
               </template>
             </Select>
           </FormItem>
           <FormItem>
             <Input @on-change="handleClear" clearable placeholder="请输入关键字" v-model="searchForm.value" />
+          </FormItem>
+          <FormItem label="时间范围:" :label-width="80">
+            <DatePicker v-model="searchForm.time" type="datetimerange" placeholder="请选择范围" transfer></DatePicker>
           </FormItem>
           <FormItem>
             <Button @click="handleSearch" type="primary" icon="md-search">搜索</Button>
@@ -31,7 +34,7 @@
     </Row>
     <Row>
       <i-col :span="24">
-        <Table :loading="loading" stripe border :columns="columns" :data="tableData" @on-select-change="handleSelectTableItem">
+        <Table :loading="loading" border :columns="columns" :data="tableData" @on-select-change="handleSelectTableItem" :disabled-hover="true">
           <template slot-scope="{row, index}" slot="action">
             <div v-for="(bItem, bIndex) in btnList" :key="bIndex" style="display: inline-block;margin-right: 5px">
               <Poptip v-if="bItem === 'DELETE'" confirm title="确定要删除吗？" transfer @on-ok="deleteItem(row, index)">
@@ -49,6 +52,7 @@
 
 <script>
 import MyCard from '_c/MyCard'
+import { getDeviceAlarm } from '@/api/hd'
 export default {
   components: {
     MyCard
@@ -56,30 +60,83 @@ export default {
   data () {
     return {
       columns: [
+        // {
+        //   title: 'ID',
+        //   key: 'id',
+        //   width: 150,
+        //   align: 'center'
+        // },
         {
-          type: 'selection',
-          width: 50,
+          title: '设备ID',
+          key: 'deviceId',
+          width: 150,
           align: 'center'
         },
         {
-          title: '场景ID',
-          key: 'id'
+          title: '外部报警信息',
+          key: 'extraAlarm',
+          width: 130,
+          align: 'center'
         },
         {
-          title: '场景名称',
-          key: 'name'
+          title: '欠压报警信息',
+          key: 'overvoltAlarm',
+          width: 130,
+          align: 'center'
         },
         {
-          title: '区域ID',
-          key: 'areaId'
+          title: '温度超限报警信息',
+          key: 'tempAlarm',
+          width: 160,
+          align: 'center'
         },
         {
-          title: '场景类型',
-          key: 'type'
+          title: '电流不平衡报警信息',
+          key: 'currentUnbalanceAlarm',
+          width: 180,
+          align: 'center'
         },
         {
-          title: '备注',
-          key: 'remark'
+          title: '电压不平衡报警信息',
+          key: 'voltageUnbalanceAlarm',
+          width: 180,
+          align: 'center'
+        },
+        {
+          title: '过载电流报警信息',
+          key: 'currentAlarm',
+          width: 160,
+          align: 'center'
+        },
+        {
+          title: '库门没关报警信息',
+          key: 'doorOpenAlarm',
+          width: 160,
+          align: 'center'
+        },
+        {
+          title: '库温探头坏报警信息',
+          key: 'storageDetectorAlarm',
+          width: 180,
+          align: 'center'
+        },
+        {
+          title: '蒸发器探头坏报警信息',
+          key: 'defrostDetectorAlarm',
+          width: 190,
+          align: 'center'
+        },
+        {
+          title: '环境温度探头坏报警信息',
+          key: 'enviDetectorAlarm',
+          width: 210,
+          align: 'center'
+        },
+        {
+          title: '时间',
+          key: 'dateTime',
+          width: 160,
+          align: 'center'
         },
         {
           title: '操作',
@@ -93,12 +150,18 @@ export default {
       total: 0,
       tableData: [],
       searchForm: {},
-      selection: []
+      selection: [],
+      deviceId: ''
     }
   },
   methods: {
     // 获取列表
-    getItems (params) {
+    async getItems (params) {
+      const res = await getDeviceAlarm(params)
+      if (res.data && res.data.code === 0) {
+        this.tableData = res.data.data.list
+        this.total = res.data.data.total
+      }
     },
     // 删除
     deleteItem (row, index) {
@@ -117,7 +180,12 @@ export default {
     handleChangePage (e) {
       const obj = { size: this.size, index: e }
       if (this.searchForm.value) {
-        Object.assign(obj, this.searchForm)
+        Object.assign(obj, { [this.searchForm.key]: this.searchForm.value })
+      }
+      if (this.searchForm.time[0]) {
+        this.searchForm.time = this.searchForm.time.map((item, index) => new Date(item).getTime())
+        obj.startTime = this.searchForm.time[0]
+        obj.stopTime = this.searchForm.time[1]
       }
       this.getItems(obj)
     },
@@ -132,24 +200,36 @@ export default {
     // 设置默认的搜索key
     setDefaultSearchKey () {
       this.$set(this.searchForm, 'key', this.columns[0].key ? this.columns[0].key : this.columns[1].key)
+      this.$set(this.searchForm, 'value', this.deviceId)
     },
     // 分页改变事件
     handlePageSizeChange (e) {
       this.size = e
-      const searchObj = { size: this.size }
-      if (this.searchForm.value) {
-        Object.assign(searchObj, this.searchForm)
+      const obj = { size: this.size, [this.searchForm.key]: this.searchForm.value }
+      if (this.searchForm.time[0]) {
+        this.searchForm.time = this.searchForm.time.map((item, index) => new Date(item).getTime())
+        obj.startTime = this.searchForm.time[0]
+        obj.stopTime = this.searchForm.time[1]
       }
-      this.getItems(searchObj)
+      this.getItems(obj)
     },
     // 搜索
     handleSearch () {
       const obj = {}
       obj[this.searchForm.key] = this.searchForm.value
+      if (this.searchForm.time[0]) {
+        this.searchForm.time = this.searchForm.time.map((item, index) => new Date(item).getTime())
+        obj.startTime = this.searchForm.time[0]
+        obj.stopTime = this.searchForm.time[1]
+      }
       this.getItems(obj)
     }
   },
-  mounted () {}
+  mounted () {
+    this.deviceId = this.$route.params.deviceId
+    this.getItems()
+    this.setDefaultSearchKey()
+  }
 }
 </script>
 

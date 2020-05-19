@@ -1,5 +1,6 @@
 import { login, getMenus, getStorageByUid } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken, getUserControlMenuByRouter } from '@/libs/util'
+import { defaultRoutes } from '@/router/routers'
 
 export default {
   state: {
@@ -35,7 +36,9 @@ export default {
       state.storages = storages
     }
   },
-  getters: {},
+  getters: {
+    userMenuList: (state, getter, rootState) => getUserControlMenuByRouter(defaultRoutes)
+  },
   actions: {
     // 登录
     async handleLogin ({ commit }, { userName, password }) {

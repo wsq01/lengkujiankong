@@ -366,3 +366,21 @@ export const initAsyncRouter = (menuList, routers) => {
   })
   return result
 }
+export const getUserControlMenuByRouter = (list) => {
+  const res = []
+  forEach(list, item => {
+    if (item.meta.userControl) {
+      const obj = {
+        icon: (item.meta && item.meta.icon) || '',
+        name: item.name,
+        meta: item.meta
+      }
+      if ((hasChild(item) || (item.meta && item.meta.showAlways))) {
+        obj.children = getUserControlMenuByRouter(item.children)
+      }
+      if (item.meta && item.meta.href) obj.href = item.meta.href
+      res.push(obj)
+    }
+  })
+  return res
+}

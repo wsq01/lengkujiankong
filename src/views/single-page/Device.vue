@@ -1,23 +1,5 @@
 <template>
   <div>
-    <Row :gutter="20" type="flex" justify="space-between" align="middle">
-      <i-col :span="16">中集冷云</i-col>
-      <i-col :span="8">
-        <RadioGroup style="float: right" v-model="switchBtn" type="button">
-          <Radio label="关机"></Radio>
-          <Radio label="开机"></Radio>
-        </RadioGroup>
-        <Dropdown style="float: right">
-          <Button type="primary">
-            {{dropdownMenuOptions.title}}
-            <Icon type="ios-arrow-down"></Icon>
-          </Button>
-          <DropdownMenu slot="list">
-            <DropdownItem v-for="(item, index) in dropdownMenuOptions.list" :key="index">{{item}}</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </i-col>
-    </Row>
     <Row :gutter="20" class="lkstatistics">
       <i-col :lg="12" :md="24">
         <my-card>
@@ -81,6 +63,7 @@
 import Charts from '_c/Charts'
 import MyCard from '_c/MyCard'
 import { getDeviceModel, getDevice } from '@/api/user'
+import { getHDeviceDataTrend } from '@/api/rt'
 
 export default {
   name: 'Device',
@@ -120,6 +103,11 @@ export default {
         // this.deviceDesc = res.data.data.list[0]
         this.initDeviceDesc(res.data.data.list[0])
       }
+    },
+    async getHDeviceDataTrend () {
+      const params = { deviceId: this.deviceId, value: 'd' }
+      const res = await getHDeviceDataTrend(params)
+      console.log(res)
     },
     initDeviceDesc (deviceList) {
       this.deviceDesc.desc.forEach((item, index) => {
@@ -289,7 +277,7 @@ export default {
         ],
         series: [
           {
-            name: '降水量',
+            name: '耗电量',
             type: 'bar',
             barWidth: 20,
             data: [
@@ -325,7 +313,6 @@ export default {
     async getDeviceModel () {
       const params = { deviceId: this.deviceId }
       const res = await getDeviceModel(params)
-      console.log(res)
       if (res.data.code === 0) {
         this.deviceModel = res.data.data.list[0]
       }
@@ -337,6 +324,7 @@ export default {
     // this.deviceId = this.$store.state.app.deviceId
     this.getDevice()
     this.getDeviceModel()
+    this.getHDeviceDataTrend()
   }
 }
 </script>

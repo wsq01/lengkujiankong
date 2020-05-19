@@ -12,8 +12,8 @@ export default {
    */
   baseUrl: {
     csrc: '//www.sscs58.com:8012',
-    rt: '//www.sscs58.com:8013',
-    hd: '//www.sscs58.com:8014'
+    hd: '//www.sscs58.com:8013',
+    rt: '//114.64.253.136:8014'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

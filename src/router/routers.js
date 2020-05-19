@@ -159,5 +159,74 @@ export const asyncRoutes = [
         component: () => import('@/views/single-page/Storage.vue')
       }
     ]
+  },
+  {
+    path: '/role',
+    name: '_role',
+    redirect: 'role',
+    component: Main,
+    meta: {
+      userControl: true,
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'role',
+        name: 'role',
+        meta: {
+          userControl: true,
+          icon: 'md-globe',
+          title: '角色管理'
+        },
+        component: () => import('@/views/user-page/role.vue')
+      }
+    ]
+  },
+  {
+    path: '/reluser',
+    name: '_reluser',
+    redirect: 'reluser',
+    component: Main,
+    meta: {
+      userControl: true,
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'reluser',
+        name: 'reluser',
+        meta: {
+          userControl: true,
+          icon: 'md-globe',
+          title: '用户角色关联管理'
+        },
+        component: () => import('@/views/user-page/reluser.vue')
+      }
+    ]
+  },
+  {
+    path: '/user',
+    name: '_user',
+    redirect: 'user',
+    component: Main,
+    meta: {
+      userControl: true,
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'user',
+        name: 'user',
+        meta: {
+          userControl: true,
+          icon: 'md-globe',
+          title: '用户管理'
+        },
+        component: () => import('@/views/user-page/user.vue')
+      }
+    ]
   }
 ]

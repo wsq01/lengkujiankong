@@ -2,7 +2,7 @@
   <Layout style="height: 100%" class="main">
     <div id="particles"></div>
     <Sider hide-trigger collapsible :width="256" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{ overflow: 'hidden' }">
-      <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
+      <side-menu v-if="!isMenu" accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
         <div class="logo-con">
           <img v-if="!collapsed" :src="maxLogo" key="max-logo"/>
@@ -22,11 +22,18 @@
             </RadioGroup>
         </div>
       </side-menu>
+      <side-menu v-else accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="userMenuList">
+        <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
+        <div class="logo-con">
+          <img v-if="!collapsed" :src="maxLogo" key="max-logo"/>
+          <span v-else class="logozi">CIMC</span>
+        </div>
+      </side-menu>
     </Sider>
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <user :user-avatar="userAvatar"/>
+          <user :user-avatar="userAvatar" @on-select-top="handleSelectTopMenu"/>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>
@@ -84,7 +91,8 @@ export default {
       maxLogo,
       isFullscreen: false,
       isShowTopMenu: false,
-      selectedMenu: 'device'
+      selectedMenu: 'device',
+      isMenu: false
     }
   },
   computed: {
@@ -96,6 +104,9 @@ export default {
     },
     userAvatar () {
       return this.$store.state.user.avatarImgPath
+    },
+    userMenuList () {
+      return this.$store.getters.userMenuList
     },
     cacheList () {
       const list = ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
@@ -137,6 +148,19 @@ export default {
     handleCollapsedChange (state) {
       this.collapsed = state
     },
+    handleSelectTopMenu (name) {
+      if (name === 'storage') {
+        this.isMenu = true
+        this.$router.push({
+          name: 'home'
+        })
+      } else if (name === 'authority') {
+        this.isMenu = false
+        this.$router.push({
+          name: 'user'
+        })
+      }
+    },
     handleCloseTag (res, type, route) {
       if (type !== 'others') {
         if (type === 'all') {
@@ -159,7 +183,6 @@ export default {
   },
   watch: {
     '$route' (newRoute) {
-      console.log(newRoute)
       const { name, query, params, meta } = newRoute
       this.addTag({
         route: { name, query, params, meta },
