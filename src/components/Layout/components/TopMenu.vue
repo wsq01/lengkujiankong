@@ -5,11 +5,10 @@
         <Radio label="关机"></Radio>
         <Radio label="开机"></Radio>
       </RadioGroup>
-      <Select v-model="selectedItem" style="width:110px;margin: 0 10px 0;float: right" @on-change="bindMenuChange">
+      <Select v-model="selectedItem" style="width:110px;float: right" @on-change="bindMenuChange">
         <Option v-for="item in menuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </i-col>
-    <i-col :span="1"></i-col>
   </Row>
 </template>
 
@@ -58,6 +57,9 @@ export default {
     background: rgba(24, 46, 132, 1);
     border: none;
   }
+  // .topright{
+  //   margin-right: 20px;
+  // }
   .ivu-select-dropdown {
     background: rgba(24, 46, 132, 1);
     max-height: fit-content;
