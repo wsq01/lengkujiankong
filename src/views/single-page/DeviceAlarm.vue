@@ -135,7 +135,7 @@ export default {
         {
           title: '时间',
           key: 'dateTime',
-          width: 160,
+          width: 210,
           align: 'center'
         },
         {
@@ -159,9 +159,41 @@ export default {
     async getItems (params) {
       const res = await getDeviceAlarm(params)
       if (res.data && res.data.code === 0) {
+        let arrs=res.data.data.list
+        let that=this
+        arrs.forEach(function(currentValue, index, arr){ 
+          console.log(currentValue,index)
+           console.log(arr)
+        let shijianchu=currentValue.dateTime/1000;
+        let times=that.timeConvert(shijianchu,1); 
+
+         that.$set(arr[index],"dateTime", times)
+		  	})
         this.tableData = res.data.data.list
         this.total = res.data.data.total
       }
+    },
+    timeConvert(timestamp,num){
+      //num:0 YYYY-MM-DD  num:1  YYYY-MM-DD hh:mm:ss // timestamp:时间戳 
+        timestamp = timestamp+'';
+        timestamp = timestamp.length==10?timestamp*1000:timestamp;
+        var date = new Date(timestamp);
+        var y = date.getFullYear();  
+        var m = date.getMonth() + 1;  
+        m = m < 10 ? ('0' + m) : m;  
+        var d = date.getDate();  
+        d = d < 10 ? ('0' + d) : d;  
+        var h = date.getHours();
+        h = h < 10 ? ('0' + h) : h;
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        minute = minute < 10 ? ('0' + minute) : minute;  
+        second = second < 10 ? ('0' + second) : second; 
+        if(num==0){
+            return y + '-' + m + '-' + d;  
+        }else{
+            return y + '-' + m + '-' + d +' '+ h +':'+ minute +':' + second;  
+        }
     },
     // 删除
     deleteItem (row, index) {

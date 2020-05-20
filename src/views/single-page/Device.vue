@@ -428,6 +428,7 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding: 17px 0 30px;
     .cricleborder {
       font-size: 24px;
       display: inline-block;

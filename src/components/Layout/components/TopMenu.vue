@@ -53,6 +53,7 @@ export default {
 <style lang="less">
 .top-menu {
   margin: 20px auto 0;
+  padding-right: 30px;
   .ivu-select-selection {
     background: rgba(24, 46, 132, 1);
     border: none;
