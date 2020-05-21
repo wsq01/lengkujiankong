@@ -40,9 +40,26 @@
         <i-col span="24">
           <Form :model="formItem" :label-width="80">
             <FormItem :label="formItemLabel[0]">
-              <Input v-model="formItem.name" />
+              <Input v-model="formItem.id" />
             </FormItem>
             <FormItem :label="formItemLabel[1]">
+              <Input v-model="formItem.name" />
+            </FormItem>
+            <FormItem :label="formItemLabel[2]">
+              <Input v-model="formItem.type" />
+            </FormItem>
+            <FormItem :label="formItemLabel[3]">
+              <Input v-model="formItem.model" />
+            </FormItem>
+            <FormItem :label="formItemLabel[4]">
+              <Select v-model="formItem.storageId">
+                <Option v-for="(item, index) in storageList" :key="index" :value="item.id">{{item.name}}</Option>
+              </Select>
+            </FormItem>
+            <FormItem :label="formItemLabel[5]">
+              <Input v-model="formItem.sn" />
+            </FormItem>
+            <FormItem :label="formItemLabel[6]">
               <Input v-model="formItem.remark" type="textarea"/>
             </FormItem>
           </Form>
@@ -53,12 +70,12 @@
 </template>
 
 <script>
-import { getRole, deleteRole, addRole, editRole } from '@/api/user'
+import { getStorageBySid, deleteStorage, editStorage, addStorage } from '@/api/user'
 import minxin from '@/assets/js/mixin'
 import MyCard from '_c/MyCard'
 
 export default {
-  name: 'Role',
+  name: 'Storage',
   mixins: [minxin],
   components: {
     MyCard
@@ -89,37 +106,33 @@ export default {
           align: 'center'
         }
       ],
-      formItemLabel: ['角色名称', '备注'],
-      formItem: {},
-      submitType: ''
+      formItemLabel: ['设备ID', '设备名称', '设备类型', '设备模式', '所属仓库', 'SN码', '备注'],
+      storageList: []
     }
   },
   methods: {
+    async getStorages () {
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      const sid = userInfo.userId
+      const res = await getStorageBySid({ sid })
+      if (res.data.code === 0) {
+        this.storageList = res.data.data.list
+      }
+    },
     // 查
     async getItems (params) {
-      const res = await getRole(params)
-      this.loading = false
-      if (res.data.code === 0) {
-        this.tableData = res.data.data.list
-        this.total = res.data.data.total
-      } else {
-        this.$Message.warning(res.data.message)
-      }
+      const res = await getStorageBySid(params)
+      this.getSuccess(res)
     },
     // 删
     async deleteItem (row, index) {
-      const res = await deleteRole(row.id)
-      if (res.data.code === 0) {
-        this.tableData.splice(index, 1)
-        this.$Message.success('删除成功！')
-      } else {
-        this.$Message.warning(res.data.message)
-      }
+      const res = await deleteStorage(row.id)
+      this.deleteSuccess(res, index)
     },
     // 增 改
     async submit () {
       if (this.submitType === 'add') {
-        const res = await addRole(this.formItem)
+        const res = await addStorage(this.formItem)
         this.modal = !this.modal
         if (res.data.code === 0) {
           this.$Message.success('添加成功！')
@@ -128,7 +141,7 @@ export default {
           this.$Message.warning(res.data.message)
         }
       } else {
-        const res = await editRole(this.formItem)
+        const res = await editStorage(this.formItem)
         this.modal = !this.modal
         if (res.data.code === 0) {
           this.$Message.success('修改成功！')
@@ -136,17 +149,13 @@ export default {
           this.$Message.warning(res.data.message)
         }
       }
-    },
-    addItem () {
-      this.submitType = 'add'
-      this.formItem = {}
-      this.modal = !this.modal
-    },
-    editItem (row, index) {
-      this.submitType = 'edit'
-      this.formItem = row
-      this.modal = !this.modal
     }
+  },
+  mounted () {
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    const userId = userInfo.userId
+    this.getItems({ sid: userId })
+    this.getStorageBySid(userId)
   }
 }
 </script>

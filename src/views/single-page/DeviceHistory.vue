@@ -38,16 +38,16 @@
                     </Select>
                   </FormItem>
                   <FormItem>
-                    <Input clearable placeholder="请输入关键字" v-model="historySearchForm.value" class="search-item" />
+                    <Input clearable placeholder="请输入关键字" v-model="historySearchForm.value" />
                   </FormItem>
                   <FormItem label="时间范围:" :label-width="80">
-                    <DatePicker v-model="historySearchForm.time" type="datetimerange" placeholder="请选择范围" class="search-item" transfer></DatePicker>
+                    <DatePicker v-model="historySearchForm.time" type="datetimerange" placeholder="请选择范围" transfer></DatePicker>
                   </FormItem>
                   <FormItem>
                     <Button @click="handleSearchHistory" type="primary" icon="md-search">搜索</Button>
                   </FormItem>
                 </Form>
-                <Table :loading="loading" :disabled-hover="true" border :columns="columns" :data="historyTableData"></Table>
+                <Table :loading="loading" :disabled-hover="true" border :columns="columns2" :data="historyTableData"></Table>
 
                 <Page :total="historyTotal" show-sizer show-total show-elevator :transfer="true" @on-change="handleChangeHistoryPage" @on-page-size-change="handleChangePageSizeHistory" style="margin: 10px 0 0"></Page>
               </i-col>
@@ -63,6 +63,7 @@
 import MyCard from '_c/MyCard'
 import { getRTDeviceData } from '@/api/hd'
 import { getHDeviceData } from '@/api/rt'
+import { getDate } from '@/libs/tools'
 export default {
   data () {
     return {
@@ -259,6 +260,116 @@ export default {
           align: 'center'
         }
       ],
+      columns2: [
+        {
+          title: '设备ID',
+          key: 'deviceId',
+          width: 150,
+          align: 'center'
+        },
+        {
+          title: '库门状态',
+          key: 'doorState',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '风机状态',
+          key: 'fanState',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '化霜状态',
+          key: 'defrState',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '滴水状态',
+          key: 'dripState',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '冷机状态',
+          key: 'coolerState',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '冷库温度',
+          key: 'storageTemp',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '环境温度',
+          key: 'enviTemp',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '化霜温度',
+          key: 'defrostTemp',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '交流相电压A',
+          key: 'phaseVoltageA',
+          width: 130,
+          align: 'center'
+        },
+        {
+          title: '交流相电压B',
+          key: 'phaseVoltageB',
+          width: 130,
+          align: 'center'
+        },
+        {
+          title: '交流相电压C',
+          key: 'phaseVoltageC',
+          width: 130,
+          align: 'center'
+        },
+        {
+          title: '交流线电压A',
+          key: 'lineVoltageA',
+          width: 130,
+          align: 'center'
+        },
+        {
+          title: '交流线电压B',
+          key: 'lineVoltageB',
+          width: 130,
+          align: 'center'
+        },
+        {
+          title: '交流线电压C',
+          key: 'lineVoltageC',
+          width: 130,
+          align: 'center'
+        },
+        {
+          title: '交流三相电流A',
+          key: 'runCurrentA',
+          width: 140,
+          align: 'center'
+        },
+        {
+          title: '交流三相电流B',
+          key: 'runCurrentB',
+          width: 140,
+          align: 'center'
+        },
+        {
+          title: '交流三相电流C',
+          key: 'runCurrentC',
+          width: 140,
+          align: 'center'
+        }
+      ],
       realTableData: [],
       historyTableData: [],
       isShowScene: true,
@@ -275,24 +386,84 @@ export default {
         this.getRealItems({ size: this.size, deviceId: this.deviceId })
       }
     },
+    transferData (dataList) {
+      return dataList.map((item, index) => {
+        return {
+          deviceId: item.deviceId,
+          doorState: item.doorState === '0' ? '关' : '开',
+          fanState: item.fanState === '0' ? '停机' : '开机',
+          defrState: item.defrState === '0' ? '不化霜' : '正在化霜',
+          dripState: item.dripState === '0' ? '不滴水' : '正在滴水',
+          coolerState: item.coolerState === '0' ? '停机' : '开机',
+          storageTemp: item.storageTemp + '°C',
+          enviTemp: item.enviTemp + '°C',
+          defrostingTemp: item.defrostingTemp + '°C',
+          phaseVoltageA: item.phaseVoltageA + 'V',
+          phaseVoltageB: item.phaseVoltageB + 'V',
+          phaseVoltageC: item.phaseVoltageC + 'V',
+          lineVoltageA: item.lineVoltageA + 'V',
+          lineVoltageB: item.lineVoltageB + 'V',
+          lineVoltageC: item.lineVoltageC + 'V',
+          runCurrentA: item.runCurrentA + 'A',
+          runCurrentB: item.runCurrentB + 'A',
+          runCurrentC: item.runCurrentC + 'C',
+          extraAlarm: item.extraAlarm === '0' ? '无' : '有',
+          tempAlarm: item.tempAlarm === '0' ? '无' : item.tempAlarm === '1' ? '下限报警' : '上线报警',
+          currentUnbalanceAlarm: item.currentUnbalanceAlarm === '0' ? '无' : '有',
+          doorOpenAlarm: item.doorOpenAlarm === '0' ? '无' : '有',
+          overvoltAlarm: item.overvoltAlarm === '0' ? '无' : '有',
+          voltageUnbalanceAlarm: item.voltageUnbalanceAlarm === '0' ? '无' : '有',
+          currentAlarm: item.currentAlarm === '0' ? '无' : item.currentAlarm === '1' ? '下线报警' : '上线报警',
+          storageDetectorAlarm: item.storageDetectorAlarm === '0' ? '无' : '有',
+          defrostDetectorAlarm: item.defrostDetectorAlarm === '0' ? '无' : '有',
+          enviDetectorAlarm: item.enviDetectorAlarm === '0' ? '无' : '有',
+          dateTime: getDate(item.dateTime / 1000, 'year')
+        }
+      })
+    },
+    transferData2 (dataList) {
+      return dataList.map((item, index) => {
+        return {
+          deviceId: item.deviceId,
+          doorState: item.doorState === '0' ? '关' : '开',
+          fanState: item.fanState === '0' ? '停机' : '开机',
+          defrState: item.defrState === '0' ? '不化霜' : '正在化霜',
+          dripState: item.dripState === '0' ? '不滴水' : '正在滴水',
+          coolerState: item.coolerState === '0' ? '停机' : '开机',
+          storageTemp: item.storageTemp + '°C',
+          enviTemp: item.enviTemp + '°C',
+          defrostTemp: item.defrostTemp + '°C',
+          phaseVoltageA: item.phaseVoltageA + 'V',
+          phaseVoltageB: item.phaseVoltageB + 'V',
+          phaseVoltageC: item.phaseVoltageC + 'V',
+          lineVoltageA: item.lineVoltageA + 'V',
+          lineVoltageB: item.lineVoltageB + 'V',
+          lineVoltageC: item.lineVoltageC + 'V',
+          runCurrentA: item.runCurrentA + 'A',
+          runCurrentB: item.runCurrentB + 'A',
+          runCurrentC: item.runCurrentC + 'C',
+          dateTime: getDate(item.dateTime / 1000, 'year')
+        }
+      })
+    },
     async getRealItems (params) {
       const res = await getRTDeviceData(params)
-      console.log(res)
       if (res.data && res.data.code === 0) {
-        this.realTableData = res.data.data.list
+        this.realTableData = this.transferData(res.data.data.list)
         this.total = res.data.data.total
       }
     },
     async getHistoryItems (params) {
       const res = await getHDeviceData(params)
-      console.log(res)
       if (res.data && res.data.code === 0) {
-        this.historyTableData = res.data.data.list
+        this.historyTableData = this.transferData2(res.data.data.list)
         this.historyTotal = res.data.data.total
       }
     },
     handleChangeRealSearchKey () {},
-    handleClearRealInput () {},
+    handleClearRealInput (e) {
+      this.getRealItems()
+    },
     handleChangeRealPage () {},
     handleSearchReal () {
       const obj = {}

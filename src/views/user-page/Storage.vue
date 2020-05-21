@@ -43,6 +43,9 @@
               <Input v-model="formItem.name" />
             </FormItem>
             <FormItem :label="formItemLabel[1]">
+              <Input v-model="formItem.address" />
+            </FormItem>
+            <FormItem :label="formItemLabel[1]">
               <Input v-model="formItem.remark" type="textarea"/>
             </FormItem>
           </Form>
@@ -53,12 +56,12 @@
 </template>
 
 <script>
-import { getRole, deleteRole, addRole, editRole } from '@/api/user'
+import { getStorageBySid, deleteStorage, editStorage, addStorage } from '@/api/user'
 import minxin from '@/assets/js/mixin'
 import MyCard from '_c/MyCard'
 
 export default {
-  name: 'Role',
+  name: 'Storage',
   mixins: [minxin],
   components: {
     MyCard
@@ -89,26 +92,29 @@ export default {
           align: 'center'
         }
       ],
-      formItemLabel: ['角色名称', '备注'],
+      formItemLabel: ['仓库名称', '仓库地址', '备注'],
       formItem: {},
-      submitType: ''
+      submitType: '',
+      modal: false
     }
   },
   methods: {
     // 查
     async getItems (params) {
-      const res = await getRole(params)
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      const userId = userInfo.userId
+      const res = await getStorageBySid(userId)
       this.loading = false
       if (res.data.code === 0) {
-        this.tableData = res.data.data.list
-        this.total = res.data.data.total
+        this.tableData = res.data.data ? res.data.data.list : []
+        this.total = res.data.data ? res.data.data.total : 0
       } else {
         this.$Message.warning(res.data.message)
       }
     },
     // 删
     async deleteItem (row, index) {
-      const res = await deleteRole(row.id)
+      const res = await deleteStorage(row.id)
       if (res.data.code === 0) {
         this.tableData.splice(index, 1)
         this.$Message.success('删除成功！')
@@ -119,16 +125,15 @@ export default {
     // 增 改
     async submit () {
       if (this.submitType === 'add') {
-        const res = await addRole(this.formItem)
+        const res = await addStorage(this.formItem)
         this.modal = !this.modal
         if (res.data.code === 0) {
           this.$Message.success('添加成功！')
-          this.getItems()
         } else {
           this.$Message.warning(res.data.message)
         }
       } else {
-        const res = await editRole(this.formItem)
+        const res = await editStorage(this.formItem)
         this.modal = !this.modal
         if (res.data.code === 0) {
           this.$Message.success('修改成功！')
@@ -147,6 +152,8 @@ export default {
       this.formItem = row
       this.modal = !this.modal
     }
+  },
+  mounted () {
   }
 }
 </script>

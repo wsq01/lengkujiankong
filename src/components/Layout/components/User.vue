@@ -6,8 +6,8 @@
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
 
       <DropdownMenu slot="list">
-        <DropdownItem v-if="!off" name="authority">权限管理</DropdownItem>
-        <DropdownItem v-else name="storage">仓库管理</DropdownItem>
+        <DropdownItem v-if="!off && isAuth" name="authority">个人中心</DropdownItem>
+        <DropdownItem v-if="off && isAuth" name="storage">我的仓库</DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -21,7 +21,8 @@ export default {
   data () {
     return {
       userName: '',
-      off: false
+      off: false,
+      isAuth: false
     }
   },
   props: {
@@ -31,7 +32,11 @@ export default {
     }
   },
   mounted () {
-    this.userName = JSON.parse(sessionStorage.getItem('userInfo')).role[0].roleName
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.userName = userInfo.role[0].roleName
+    if (this.userName === '普通用户') {
+      this.isAuth = true
+    }
   },
   methods: {
     ...mapActions(['handleLogOut']),

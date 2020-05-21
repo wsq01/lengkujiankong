@@ -9,11 +9,12 @@ export default {
   cookieExpires: 1,
   /**
    * @description api请求基础路径
+   * 114.64.253.136
    */
   baseUrl: {
     csrc: '//www.sscs58.com:8012',
     hd: '//www.sscs58.com:8013',
-    rt: '//114.64.253.136:8014'
+    rt: '//www.sscs58.com:8014'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

@@ -53,6 +53,7 @@
 <script>
 import MyCard from '_c/MyCard'
 import { getDeviceAlarm } from '@/api/hd'
+import { getDate } from '@/libs/tools'
 export default {
   components: {
     MyCard
@@ -60,12 +61,6 @@ export default {
   data () {
     return {
       columns: [
-        // {
-        //   title: 'ID',
-        //   key: 'id',
-        //   width: 150,
-        //   align: 'center'
-        // },
         {
           title: '设备ID',
           key: 'deviceId',
@@ -135,7 +130,7 @@ export default {
         {
           title: '时间',
           key: 'dateTime',
-          width: 160,
+          width: 200,
           align: 'center'
         },
         {
@@ -159,9 +154,27 @@ export default {
     async getItems (params) {
       const res = await getDeviceAlarm(params)
       if (res.data && res.data.code === 0) {
-        this.tableData = res.data.data.list
+        this.tableData = this.transferData(res.data.data.list)
         this.total = res.data.data.total
       }
+    },
+    transferData (dataList) {
+      return dataList.map((item, index) => {
+        return {
+          deviceId: item.deviceId,
+          extraAlarm: item.extraAlarm === '0' ? '无' : '有',
+          overvoltAlarm: item.overvoltAlarm === '0' ? '无' : '有',
+          tempAlarm: item.tempAlarm === '0' ? '无' : item.tempAlarm === '1' ? '下线报警' : '上线报警',
+          currentUnbalanceAlarm: item.currentUnbalanceAlarm === '0' ? '无' : '有',
+          voltageUnbalanceAlarm: item.voltageUnbalanceAlarm === '0' ? '无' : '有',
+          currentAlarm: item.currentAlarm === '0' ? '无' : item.currentAlarm === '1' ? '下线报警' : '上线报警',
+          doorOpenAlarm: item.doorOpenAlarm === '0' ? '无' : '有',
+          storageDetectorAlarm: item.storageDetectorAlarm === '0' ? '无' : '有',
+          defrostDetectorAlarm: item.defrostDetectorAlarm === '0' ? '无' : '有',
+          enviDetectorAlarm: item.enviDetectorAlarm === '0' ? '无' : '有',
+          dateTime: getDate(item.dateTime / 1000, 'year')
+        }
+      })
     },
     // 删除
     deleteItem (row, index) {

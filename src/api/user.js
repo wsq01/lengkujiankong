@@ -3,8 +3,8 @@ import config from '@/config'
 const baseUrl = config.baseUrl.csrc
 
 const axios = new HttpRequest(baseUrl)
-
-const UID = ''
+const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+const UID = userInfo.userId
 const getItem = (url, params) => {
   return axios.request({
     url,
@@ -55,8 +55,7 @@ export const editMenu = (params) => editItem('/csrc/sys/menu', params)
 export const deleteMenu = (params) => deleteItem('/csrc/sys/menu', params)
 export const addMenu = (params) => addItem('/csrc/sys/menu', params)
 // 仓库管理
-export const getStorage = (params) => getItem('/csrc/sys/storage', params)
-export const getStorageByUid = (params) => getItem('/csrc/sys/user/storage/' + params)
+export const getStorageBySid = (params) => getItem('/csrc/sys/storage/' + params)
 export const editStorage = (params) => editItem('/csrc/sys/storage', params)
 export const deleteStorage = (params) => deleteItem('/csrc/sys/storage', params)
 export const addStorage = (params) => addItem('/csrc/sys/storage', params)
@@ -80,6 +79,7 @@ export const addDeviceModelByExtra = (params) => addItem('/csrc/sys/deviceModel/
 // 用户管理
 export const getUser = (params) => getItem('/csrc/sys/user', params)
 export const getUserByInfo = (params) => getItem('/csrc/sys/user/info', params)
+export const getUserByUid = (params) => getItem('/csrc/sys/user/' + params)
 export const editUser = (params) => editItem('/csrc/sys/user', params)
 export const deleteUser = (params) => deleteItem('/csrc/sys/user', params)
 export const addUser = (params) => addItem('/csrc/sys/user', params)

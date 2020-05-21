@@ -3,31 +3,27 @@
     <Row :gutter="20" class="lkstatistics">
       <i-col :lg="12" :md="24">
         <my-card>
-          <p slot="title" class="title">
-            <span>冷库温度统计</span>
-            <span>2020-05-03</span>
-          </p>
           <div class="modelbg">
-            <img src="../../assets/images/model@2x.png" class="modelimg" />
+            <img src="../../assets/images/model@2x.png" />
           </div>
           <div class="showtotal">
             <div class="item">
               <i-circle :percent="80" stroke-color="#FFE167">
-                <span class="demo-Circle-inner cricleborder" style="font-size:24px">25℃</span>
+                <span class="cricleborder" style="font-size:24px">{{deviceModel.storageTemp}}°C</span>
               </i-circle>
               <span class="itemdesc">冷库温度</span>
             </div>
             <div class="item">
               <i-circle :percent="80" stroke-color="#67E4FF">
-                <span class="demo-Circle-inner cricleborder" style="font-size:24px">85W</span>
+                <span class="cricleborder" style="font-size:24px">{{deviceModel.enviTemp}}°C</span>
               </i-circle>
-              <span class="itemdesc">实时功率</span>
+              <span class="itemdesc">环境温度</span>
             </div>
             <div class="item">
               <i-circle :percent="80" stroke-color="#67FF95">
-                <span class="demo-Circle-inner cricleborder" style="font-size:24px">无</span>
+                <span class="cricleborder" style="font-size:24px">{{deviceModel.extraAlarm === '0' ? '无' : '有'}}</span>
               </i-circle>
-              <span class="itemdesc">报警情况</span>
+              <span class="itemdesc">外部报警信息</span>
             </div>
           </div>
         </my-card>
@@ -105,9 +101,18 @@ export default {
       }
     },
     async getHDeviceDataTrend () {
-      const params = { deviceId: this.deviceId, value: 'd' }
+      const params = { deviceId: this.deviceId, value: 'm' }
       const res = await getHDeviceDataTrend(params)
       console.log(res)
+      if (res.data.code === 0) {
+        const xAxisData = res.data.data.list.map((item, index) => {
+          return new Date(item.time).toTimeString().split(' ')[0]
+        })
+        const seriesData = res.data.data.list.map((item, index) => {
+          return item.temp
+        })
+        this.initLineChart(xAxisData, seriesData)
+      }
     },
     initDeviceDesc (deviceList) {
       this.deviceDesc.desc.forEach((item, index) => {
@@ -118,7 +123,7 @@ export default {
         })
       })
     },
-    initLineChart () {
+    initLineChart (xAxisData = [], seriesData = []) {
       this.lineChartOption = {
         title: {
           text: '温度变化统计(单位°C)',
@@ -135,7 +140,7 @@ export default {
           textStyle: {
             color: '#A3FFFE'
           },
-          data: ['冷库', '风机', '报警']
+          data: ['冷库温度']
         },
         grid: {
           left: '3%',
@@ -156,7 +161,7 @@ export default {
             }
           },
           boundaryGap: false,
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          data: xAxisData
         },
         yAxis: {
           type: 'value',
@@ -176,33 +181,16 @@ export default {
         },
         series: [
           {
-            name: '冷库',
+            name: '冷库温度',
             type: 'line',
-            stack: '总量',
             symbol: 'none',
             smooth: true,
-            data: [120, 132, 101, 134, 90, 230, 210]
-          },
-          {
-            name: '风机',
-            type: 'line',
-            stack: '总量',
-            symbol: 'none',
-            smooth: true,
-            data: [220, 182, 191, 234, 290, 330, 310]
-          },
-          {
-            name: '报警',
-            type: 'line',
-            stack: '总量',
-            symbol: 'none',
-            smooth: true,
-            data: [150, 232, 201, 154, 190, 330, 410]
+            data: seriesData
           }
         ]
       }
     },
-    barinit () {
+    initBarChart () {
       this.BarChartOption = {
         title: {
           text: '耗电量统计(单位W)：',
@@ -319,8 +307,7 @@ export default {
     }
   },
   mounted () {
-    this.initLineChart()
-    this.barinit()
+    this.initBarChart()
     // this.deviceId = this.$store.state.app.deviceId
     this.getDevice()
     this.getDeviceModel()
@@ -419,10 +406,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  .modelbg .modelimg {
-    height: 273px;
-    width: auto;
+    img {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+    }
   }
   .showtotal {
     display: flex;

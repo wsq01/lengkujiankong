@@ -31,91 +31,91 @@
   </Form>
 </template>
 <script>
-import SIdentify from "../VSidentify"; //**引入验证码组件**
+import SIdentify from '../VSidentify' //* *引入验证码组件**
 export default {
-  name: "LoginForm",
+  name: 'LoginForm',
   props: {
     userNameRules: {
       type: Array,
       default: () => {
-        return [{ required: true, message: "账号不能为空", trigger: "blur" }];
+        return [{ required: true, message: '账号不能为空', trigger: 'blur' }]
       }
     },
     passwordRules: {
       type: Array,
       default: () => {
-        return [{ required: true, message: "密码不能为空", trigger: "blur" }];
+        return [{ required: true, message: '密码不能为空', trigger: 'blur' }]
       }
     },
     vsidentityRules: {
       type: Array,
       default: () => {
-        return [{ required: true, message: "验证码不能为空", trigger: "blur" }];
+        return [{ required: true, message: '验证码不能为空', trigger: 'blur' }]
       }
     }
   },
-  data() {
+  data () {
     return {
       form: {
-        userName: "测试用户1",
-        password: "",
-        identifyCode: "",
+        userName: '测试用户1',
+        password: '',
+        identifyCode: '',
         code: ''
       },
-      identifyCodes: "ABCDEFGHJKMNPQRSTWXYZ0123456789"
-    };
+      identifyCodes: 'ABCDEFGHJKMNPQRSTWXYZ0123456789'
+    }
   },
   components: {
-    "v-sidentify": SIdentify
+    'v-sidentify': SIdentify
   },
   computed: {
-    rules() {
+    rules () {
       return {
         userName: this.userNameRules,
         password: this.passwordRules,
-        code:this.vsidentityRules,
-      };
+        code: this.vsidentityRules
+      }
     }
   },
-  mounted() {
-    this.form.identifyCode = "";
-    this.makeCode(this.identifyCodes, 4);
+  mounted () {
+    this.form.identifyCode = ''
+    this.makeCode(this.identifyCodes, 4)
   },
   methods: {
-    handleSubmit() {
+    handleSubmit () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          if(this.form.code!==this.form.identifyCode){
-            this.$Message.error('验证码错误,请注意字符小大写！');
-            this.form.identifyCode = "";
-           this.makeCode(this.identifyCodes, 4);
-            return false;
+          if (this.form.code !== this.form.identifyCode) {
+            this.$Message.error('验证码错误,请注意字符小大写！')
+            this.form.identifyCode = ''
+            this.makeCode(this.identifyCodes, 4)
+            return false
           }
-          this.$emit("on-success-valid", {
+          this.$emit('on-success-valid', {
             userName: this.form.userName,
             password: this.form.password
-          });
+          })
         }
-      });
+      })
     },
-    //验证码
-    randomNum(min, max) {
-      return Math.floor(Math.random() * (max - min) + min);
+    // 验证码
+    randomNum (min, max) {
+      return Math.floor(Math.random() * (max - min) + min)
     },
-    refreshCode() {
-      this.form.identifyCode = "";
-      this.makeCode(this.identifyCodes, 4);
+    refreshCode () {
+      this.form.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
     },
-    makeCode(o, l) {
+    makeCode (o, l) {
       for (let i = 0; i < l; i++) {
         this.form.identifyCode += this.identifyCodes[
           this.randomNum(0, this.identifyCodes.length)
-        ];
+        ]
       }
-      //console.log(this.form.identifyCode);
+      // console.log(this.form.identifyCode);
     }
   }
-};
+}
 </script>
 <style lang="less">
 .clogin .ivu-form-item-content {

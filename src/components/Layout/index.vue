@@ -150,12 +150,12 @@ export default {
     },
     handleSelectTopMenu (name) {
       if (name === 'storage') {
-        this.isMenu = true
+        this.isMenu = !this.isMenu
         this.$router.push({
           name: 'home'
         })
       } else if (name === 'authority') {
-        this.isMenu = false
+        this.isMenu = !this.isMenu
         this.$router.push({
           name: 'user'
         })

@@ -6,7 +6,10 @@ export default {
       total: 0,
       tableData: [],
       searchForm: {},
-      selection: []
+      selection: [],
+      formItem: {},
+      submitType: '',
+      modal: false
     }
   },
   methods: {
@@ -45,13 +48,40 @@ export default {
       obj[this.searchForm.key] = this.searchForm.value
       this.getItems(obj)
     },
+    addItem () {
+      this.submitType = 'add'
+      this.formItem = {}
+      this.modal = !this.modal
+    },
+    editItem (row, index) {
+      this.submitType = 'edit'
+      this.formItem = row
+      this.modal = !this.modal
+    },
     getSuccess (res) {
       this.loading = false
       if (res.data.code === 0) {
         this.tableData = res.data.data.list
         this.total = res.data.data.total
       } else {
-
+        this.$Message.warning(res.data.message)
+      }
+    },
+    addSuccess (res) {
+      if (res.data.code === 0) {
+        this.modal = false
+        this.$Message.success('添加成功！')
+        this.getItems()
+      } else {
+        this.$Message.warning(res.data.message)
+      }
+    },
+    editSuccess (res) {
+      if (res.data.code === 0) {
+        this.modal = false
+        this.$Message.success('修改成功！')
+      } else {
+        this.$Message.warning(res.data.message)
       }
     },
     deleteSuccess (res, index) {
@@ -76,7 +106,6 @@ export default {
     }
   },
   mounted () {
-    this.getItems({ size: this.size })
     this.setDefaultSearchKey()
   }
 }

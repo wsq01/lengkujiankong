@@ -13,34 +13,42 @@
 </template>
 
 <script>
-import LoginForm from "_c/LoginForm";
-import { mapActions } from "vuex";
+import LoginForm from '_c/LoginForm'
+import { mapActions } from 'vuex'
 export default {
   components: {
     LoginForm
   },
   methods: {
-    ...mapActions(["handleLogin"]),
-    handleSubmit({ userName, password }) {
-      this.loading = true;
+    ...mapActions(['handleLogin']),
+    handleSubmit ({ userName, password }) {
+      this.loading = true
       this.handleLogin({ userName, password }).then(res => {
-        this.loading = false;
+        this.loading = false
         if (res.data && res.data.code === 0) {
           this.$router.push({
             name: this.$config.homeName
-          });
+          })
         } else {
           this.$Message.error({
-            content: (res.data && res.data.message) || "登录失败",
+            content: (res.data && res.data.message) || '登录失败',
             duration: 2
-          });
+          })
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 <style lang="less">
+.login .ivu-input-wrapper {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    vertical-align: middle;
+    line-height: normal;
+    background: #fff;
+}
 .login .ivu-input-group .ivu-input {
   height: 48px;
   color: #0e1fa3;

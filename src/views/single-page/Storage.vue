@@ -11,7 +11,6 @@
               <p>{{item.type}}</p>
               <p>{{item.SN}}</p>
             </div>
-
           </div>
         </my-card>
       </i-col>

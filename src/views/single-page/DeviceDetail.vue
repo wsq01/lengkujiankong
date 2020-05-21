@@ -55,7 +55,7 @@ export default {
         { key: 'storageDetectorFix', label: '库温探头修正', value: '' }
       ],
       isShowModal: false,
-      deviceModelForm: null
+      deviceModelForm: {}
     }
   },
   props: ['deviceId'],
@@ -79,6 +79,8 @@ export default {
       if (res.data.code === 0 && res.data.data.list.length !== 0) {
         this.initDeviceModel(res.data.data.list[0], this.deviceModel)
         this.deviceModelForm = res.data.data.list[0]
+      } else {
+        this.$Message.error(res.data.message)
       }
     },
     async editDeviceModel () {
@@ -100,6 +102,7 @@ export default {
     }
   },
   created () {
+    console.log(this.deviceId)
     this.getDeviceModel({ deviceId: this.deviceId })
     this.debounced = debounce(this.editDeviceModel, 1000)
   }

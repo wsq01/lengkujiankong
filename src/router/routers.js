@@ -143,15 +143,15 @@ export const asyncRoutes = [
     path: '/monitor',
     name: '_monitor',
     component: Main,
-    redirect: 'storage',
+    redirect: 'mystorage',
     meta: {
-      title: '仓库管理',
-      icon: 'md-home'
+      title: '我的仓库',
+      icon: 'md-cube'
     },
     children: [
       {
-        path: '/storage',
-        name: 'storage',
+        path: '/mystorage',
+        name: 'mystorage',
         props: true,
         meta: {
           hideInMenu: true
@@ -161,55 +161,8 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/role',
-    name: '_role',
-    redirect: 'role',
-    component: Main,
-    meta: {
-      userControl: true,
-      hideInBread: true,
-      hideInMenu: true
-    },
-    children: [
-      {
-        path: 'role',
-        name: 'role',
-        meta: {
-          userControl: true,
-          icon: 'md-globe',
-          title: '角色管理'
-        },
-        component: () => import('@/views/user-page/role.vue')
-      }
-    ]
-  },
-  {
-    path: '/reluser',
-    name: '_reluser',
-    redirect: 'reluser',
-    component: Main,
-    meta: {
-      userControl: true,
-      hideInBread: true,
-      hideInMenu: true
-    },
-    children: [
-      {
-        path: 'reluser',
-        name: 'reluser',
-        meta: {
-          userControl: true,
-          icon: 'md-globe',
-          title: '用户角色关联管理'
-        },
-        component: () => import('@/views/user-page/reluser.vue')
-      }
-    ]
-  },
-  {
     path: '/user',
     name: '_user',
-    redirect: 'user',
     component: Main,
     meta: {
       userControl: true,
@@ -218,15 +171,104 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'user',
+        path: '',
         name: 'user',
         meta: {
           userControl: true,
           icon: 'md-globe',
           title: '用户管理'
         },
-        component: () => import('@/views/user-page/user.vue')
+        component: () => import('@/views/user-page/User.vue')
+      }
+    ]
+  },
+  {
+    path: '/storage',
+    name: '_storage',
+    component: Main,
+    meta: {
+      userControl: true,
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: '',
+        name: 'storage',
+        props: true,
+        meta: {
+          userControl: true,
+          icon: 'md-globe',
+          title: '仓库管理'
+        },
+        component: () => import('@/views/user-page/Storage.vue')
       }
     ]
   }
+  // {
+  //   path: '/userrelstorage',
+  //   name: '_userrelstorage',
+  //   component: Main,
+  //   meta: {
+  //     userControl: true,
+  //     hideInBread: true,
+  //     hideInMenu: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'userrelstorage',
+  //       meta: {
+  //         userControl: true,
+  //         icon: 'md-globe',
+  //         title: '用户仓库关联管理'
+  //       },
+  //       component: () => import('@/views/user-page/UserRelStorage.vue')
+  //     }
+  //   ]
+  // }
+  // {
+  //   path: '/role',
+  //   name: '_role',
+  //   component: Main,
+  //   meta: {
+  //     userControl: true,
+  //     hideInBread: true,
+  //     hideInMenu: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'role',
+  //       meta: {
+  //         userControl: true,
+  //         icon: 'md-globe',
+  //         title: '角色管理'
+  //       },
+  //       component: () => import('@/views/user-page/role.vue')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/reluser',
+  //   name: '_reluser',
+  //   component: Main,
+  //   meta: {
+  //     userControl: true,
+  //     hideInBread: true,
+  //     hideInMenu: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'reluser',
+  //       meta: {
+  //         userControl: true,
+  //         icon: 'md-globe',
+  //         title: '用户角色关联管理'
+  //       },
+  //       component: () => import('@/views/user-page/reluser.vue')
+  //     }
+  //   ]
+  // }
 ]
