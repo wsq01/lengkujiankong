@@ -130,7 +130,7 @@ export default {
         {
           title: '时间',
           key: 'dateTime',
-          width: 200,
+          width: 210,
           align: 'center'
         },
         {

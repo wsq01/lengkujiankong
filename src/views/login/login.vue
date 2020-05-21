@@ -110,5 +110,36 @@ export default {
       color: #c3c3c3;
     }
   }
+  @media only screen and (max-width: 1440px) {
+    &-con {
+      position: absolute;
+      right: 14%;
+      top: 50%;
+      transform: translateY(-42%);
+      width: 40%;
+      height: 42%;
+      background: url("../../assets/images/login-form.png") no-repeat;
+      background-size: 100% 100%;
+      padding: 60px 45px;
+      box-sizing: border-box;
+      &-header {
+        font-size: 16px;
+        font-weight: 300;
+        text-align: center;
+        padding: 30px 0;
+      }
+      .form-con {
+        padding: 10px 0 0;
+        .ivu-input-group {
+          height: 48px;
+        }
+      }
+      .login-tip {
+        font-size: 10px;
+        text-align: center;
+        color: #c3c3c3;
+      }
+    }
+  }
 }
 </style>
