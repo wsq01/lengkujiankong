@@ -18,6 +18,13 @@ const deleteItem = (url, id) => {
     method: 'delete'
   })
 }
+const deleteItem2 = (url, params) => {
+  return axios.request({
+    url,
+    method: 'delete',
+    params
+  })
+}
 const addItem = (url, params) => {
   const data = {
     uid: UID,
@@ -55,6 +62,7 @@ export const editMenu = (params) => editItem('/csrc/sys/menu', params)
 export const deleteMenu = (params) => deleteItem('/csrc/sys/menu', params)
 export const addMenu = (params) => addItem('/csrc/sys/menu', params)
 // 仓库管理
+export const getStorage = (params) => getItem('/csrc/sys/storage', params)
 export const getStorageBySid = (params) => getItem('/csrc/sys/storage/' + params)
 export const editStorage = (params) => editItem('/csrc/sys/storage', params)
 export const deleteStorage = (params) => deleteItem('/csrc/sys/storage', params)
@@ -66,6 +74,7 @@ export const deleteRole = (params) => deleteItem('/csrc/sys/role', params)
 export const addRole = (params) => addItem('/csrc/sys/role', params)
 // 设备管理
 export const getDevice = (params) => getItem('/csrc/sys/device', params)
+export const getDeviceOnline = (params) => getItem('/csrc/sys/device/online/' + params)
 export const getDeviceBySN = (params) => getItem('/csrc/sys/device/SN', params)
 export const editDevice = (params) => editItem('/csrc/sys/device', params)
 export const deleteDevice = (params) => deleteItem('/csrc/sys/device', params)
@@ -80,6 +89,10 @@ export const addDeviceModelByExtra = (params) => addItem('/csrc/sys/deviceModel/
 export const getUser = (params) => getItem('/csrc/sys/user', params)
 export const getUserByInfo = (params) => getItem('/csrc/sys/user/info', params)
 export const getUserByUid = (params) => getItem('/csrc/sys/user/' + params)
+export const getUserStorageByUid = (params) => getItem('/csrc/sys/user/storage/' + params)
+export const getUListByCreateUser = (params) => getItem('/csrc/sys/user/ulist/' + params)
+export const getSListByCreateUser = (params) => getItem('/csrc/sys/user/slist/' + params)
+export const getAllocatedByCreateUser = (params) => getItem('/csrc/sys/user/allocated/' + params)
 export const editUser = (params) => editItem('/csrc/sys/user', params)
 export const deleteUser = (params) => deleteItem('/csrc/sys/user', params)
 export const addUser = (params) => addItem('/csrc/sys/user', params)
@@ -96,12 +109,12 @@ export const addRoleRelMenu = (params) => addItem('/csrc/sys/roleRelMenu', param
 // 用户和仓库关联管理
 export const getUserRelStorage = (params) => getItem('/csrc/sys/userRelStorage', params)
 export const editUserRelStorage = (params) => editItem('/csrc/sys/userRelStorage', params)
-export const deleteUserRelStorage = (params) => deleteItem('/csrc/sys/userRelStorage', params)
+export const deleteUserRelStorage = (uid, sid) => deleteItem('/csrc/sys/userRelStorage/user/' + uid + '/storage/' + sid, '')
 export const addUserRelStorage = (params) => addItem('/csrc/sys/userRelStorage', params)
 // 用户和角色关联管理
 export const getUserRelRole = (params) => getItem('/csrc/sys/userRelRole', params)
 export const editUserRelRole = (params) => editItem('/csrc/sys/userRelRole', params)
-export const deleteUserRelRole = (params) => deleteItem('/csrc/sys/userRelRole', params)
+export const deleteUserRelRole = (params) => deleteItem2('/csrc/sys/userRelRole', params)
 export const addUserRelRole = (params) => addItem('/csrc/sys/userRelRole', params)
 // 菜单管理
 export const getMenus = (params) => getItem('/csrc/sys/menu', params)

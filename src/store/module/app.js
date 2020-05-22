@@ -29,7 +29,8 @@ export default {
     tagNavList: [],
     homeRoute: {},
     menuList: [],
-    deviceId: ''
+    deviceId: '',
+    socketMsg: '{}'
   },
   getters: {
     menuList: (state, getters, rootState) => getMenuByRouter(defaultRoutes, rootState.user.access)
@@ -37,6 +38,9 @@ export default {
   mutations: {
     setBreadCrumb (state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
+    },
+    setSocketMsg (state, msg) {
+      state.socketMsg = msg
     },
     setHomeRoute (state, routes) {
       state.homeRoute = getHomeRoute(routes, homeName)
@@ -80,5 +84,17 @@ export default {
     }
   },
   actions: {
+    reqSocketMsg ({ state, commit }, msg) {
+      return new Promise((resolve, reject) => {
+        try {
+          setTimeout(() => {
+            commit('setSocketMsg', msg)
+            resolve(msg)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    }
   }
 }

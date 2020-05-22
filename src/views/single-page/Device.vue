@@ -7,23 +7,23 @@
             <img src="../../assets/images/model@2x.png" />
           </div>
           <div class="showtotal">
-            <div class="item">
+            <div class="item" v-if="deviceModel.cmStartTemp">
               <i-circle :percent="80" stroke-color="#FFE167">
-                <span class="cricleborder" style="font-size:24px">{{deviceModel.storageTemp}}°C</span>
+                <span class="cricleborder" style="font-size:24px">{{deviceModel.cmStartTemp}}°C</span>
               </i-circle>
-              <span class="itemdesc">冷库温度</span>
+              <span class="itemdesc">冷机开机温度</span>
             </div>
-            <div class="item">
+            <div class="item" v-if="deviceModel.cmStopTemp">
               <i-circle :percent="80" stroke-color="#67E4FF">
-                <span class="cricleborder" style="font-size:24px">{{deviceModel.enviTemp}}°C</span>
+                <span class="cricleborder" style="font-size:24px">{{deviceModel.cmStopTemp}}°C</span>
               </i-circle>
-              <span class="itemdesc">环境温度</span>
+              <span class="itemdesc">冷机停机温度</span>
             </div>
-            <div class="item">
+            <div class="item" v-if="deviceModel.fanStartTemp">
               <i-circle :percent="80" stroke-color="#67FF95">
-                <span class="cricleborder" style="font-size:24px">{{deviceModel.extraAlarm === '0' ? '无' : '有'}}</span>
+                <span class="cricleborder" style="font-size:24px">{{deviceModel.fanStartTemp === '0' ? '无' : '有'}}</span>
               </i-circle>
-              <span class="itemdesc">外部报警信息</span>
+              <span class="itemdesc">风机启动温度</span>
             </div>
           </div>
         </my-card>
@@ -41,16 +41,16 @@
       </i-col>
     </Row>
     <Row :gutter="20">
-      <i-col :lg="12" :md="24">
+      <i-col :lg="24" :md="24" v-show="leftChartList.length != 0">
         <my-card>
           <charts :option="lineChartOption" style="height: 350px"></charts>
         </my-card>
       </i-col>
-      <i-col :lg="12" :md="24">
+      <!-- <i-col :lg="12" :md="24" v-if="leftChartList.length != 0">
         <my-card>
           <charts :option="BarChartOption" style="height: 350px"></charts>
         </my-card>
-      </i-col>
+      </i-col> -->
     </Row>
   </div>
 </template>
@@ -82,7 +82,8 @@ export default {
           { key: 'model', name: 'model', value: '' },
           { key: 'SN', name: 'SN', value: '' }
         ]
-      }
+      },
+      leftChartList: []
     }
   },
   props: ['deviceId'],
@@ -103,15 +104,18 @@ export default {
     async getHDeviceDataTrend () {
       const params = { deviceId: this.deviceId, value: 'm' }
       const res = await getHDeviceDataTrend(params)
-      console.log(res)
       if (res.data.code === 0) {
+        this.leftChartList = res.data.data.list
         const xAxisData = res.data.data.list.map((item, index) => {
           return new Date(item.time).toTimeString().split(' ')[0]
         })
         const seriesData = res.data.data.list.map((item, index) => {
-          return item.temp
+          return item.storageTemp
         })
-        this.initLineChart(xAxisData, seriesData)
+        const seriesData2 = res.data.data.list.map((item, index) => {
+          return item.enviTemp
+        })
+        this.initLineChart(xAxisData, seriesData, seriesData2)
       }
     },
     initDeviceDesc (deviceList) {
@@ -123,7 +127,7 @@ export default {
         })
       })
     },
-    initLineChart (xAxisData = [], seriesData = []) {
+    initLineChart (xAxisData = [], seriesData = [], seriesData2 = []) {
       this.lineChartOption = {
         title: {
           text: '温度变化统计(单位°C)',
@@ -140,7 +144,7 @@ export default {
           textStyle: {
             color: '#A3FFFE'
           },
-          data: ['冷库温度']
+          data: ['冷库温度', '环境温度']
         },
         grid: {
           left: '3%',
@@ -186,114 +190,13 @@ export default {
             symbol: 'none',
             smooth: true,
             data: seriesData
-          }
-        ]
-      }
-    },
-    initBarChart () {
-      this.BarChartOption = {
-        title: {
-          text: '耗电量统计(单位W)：',
-          textStyle: {
-            color: '#A3FFFE'
-          }
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          right: '2%',
-          top: '2%',
-          textStyle: {
-            color: '#A3FFFE'
           },
-          data: ['降水量']
-        },
-        calculable: true,
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: [
           {
-            type: 'category',
-            splitLine: {
-              show: false
-            },
-            axisLabel: {
-              show: true,
-              textStyle: {
-                color: '#fff',
-                fontSize: 14
-              }
-            },
-            data: [
-              '1月',
-              '2月',
-              '3月',
-              '4月',
-              '5月',
-              '6月',
-              '7月',
-              '8月',
-              '9月',
-              '10月',
-              '11月',
-              '12月'
-            ]
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              }
-            },
-            axisLabel: {
-              show: true,
-              textStyle: {
-                color: '#fff',
-                fontSize: 14
-              }
-            }
-          }
-        ],
-        series: [
-          {
-            name: '耗电量',
-            type: 'bar',
-            barWidth: 20,
-            data: [
-              52.6,
-              5.9,
-              9.0,
-              26.4,
-              28.7,
-              70.7,
-              175.6,
-              182.2,
-              48.7,
-              18.8,
-              6.0,
-              2.3
-            ],
-            itemStyle: {
-              // 柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
-              emphasis: {
-                barBorderRadius: 10
-              },
-              normal: {
-                color: '#12FFFF',
-                // 柱形图圆角，初始化效果
-                barBorderRadius: [10, 10, 0, 0]
-              }
-
-            }
+            name: '环境温度',
+            type: 'line',
+            symbol: 'none',
+            smooth: true,
+            data: seriesData2
           }
         ]
       }
@@ -302,12 +205,11 @@ export default {
       const params = { deviceId: this.deviceId }
       const res = await getDeviceModel(params)
       if (res.data.code === 0) {
-        this.deviceModel = res.data.data.list[0]
+        this.deviceModel = res.data.data.list[0] || {}
       }
     }
   },
   mounted () {
-    this.initBarChart()
     // this.deviceId = this.$store.state.app.deviceId
     this.getDevice()
     this.getDeviceModel()
@@ -418,14 +320,17 @@ export default {
     align-items: center;
     padding: 17px 0 30px;
     .cricleborder {
-      font-size: 24px;
+      font-size: .8rem;
       display: inline-block;
-      width: 80px;
-      height: 80px;
-      line-height: 80px;
+      width: 6rem;
+      height: 6rem;
+      line-height: 6rem;
       border: 2px solid #ccc;
       border-radius: 50%;
       color: @white-color;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 5px;
     }
     .item {
       display: flex;

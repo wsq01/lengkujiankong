@@ -56,17 +56,6 @@ export const defaultRoutes = [
         component: () => import('@/views/single-page/Device.vue')
       },
       {
-        path: '/deviceSetting',
-        name: 'deviceSetting',
-        props: true,
-        meta: {
-          hideInMenu: true,
-          title: '常用设置',
-          notCache: true
-        },
-        component: () => import('@/views/single-page/DeviceSetting.vue')
-      },
-      {
         path: '/deviceAlarm',
         name: 'deviceAlarm',
         props: true,
@@ -140,21 +129,19 @@ export const defaultRoutes = [
 ]
 export const asyncRoutes = [
   {
-    path: '/monitor',
-    name: '_monitor',
+    path: '/mystorage',
+    name: '_mystorage',
     component: Main,
-    redirect: 'mystorage',
     meta: {
-      title: '我的仓库',
-      icon: 'md-cube'
     },
     children: [
       {
-        path: '/mystorage',
+        path: '',
         name: 'mystorage',
         props: true,
         meta: {
-          hideInMenu: true
+          title: '我的仓库',
+          icon: 'md-cube'
         },
         component: () => import('@/views/single-page/Storage.vue')
       }
@@ -202,6 +189,29 @@ export const asyncRoutes = [
           title: '仓库管理'
         },
         component: () => import('@/views/user-page/Storage.vue')
+      }
+    ]
+  },
+  {
+    path: '/allot',
+    name: '_allot',
+    component: Main,
+    meta: {
+      userControl: true,
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: '',
+        name: 'allot',
+        props: true,
+        meta: {
+          userControl: true,
+          icon: 'md-globe',
+          title: '分配管理'
+        },
+        component: () => import('@/views/user-page/Allot.vue')
       }
     ]
   }

@@ -75,7 +75,7 @@ import minxin from '@/assets/js/mixin'
 import MyCard from '_c/MyCard'
 
 export default {
-  name: 'Storage',
+  name: 'Device',
   mixins: [minxin],
   components: {
     MyCard

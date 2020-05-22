@@ -9,15 +9,15 @@
           <span v-else class="logozi">CIMC</span>
         </div>
         <div class="choosemenu">
-            <RadioGroup v-model="devicestate">
-                <Radio label="all">
-                    <span class="muneblack"><b class="allnum">3</b>全部</span>
+            <RadioGroup v-model="deviceState">
+                <Radio label="total">
+                    <span class="muneblack"><b class="allnum">{{deviceStatus.total}}</b>全部</span>
                 </Radio>
                 <Radio label="online">
-                    <span class="muneblack"><b class="onlinenum">3</b>在线</span>
+                    <span class="muneblack"><b class="onlinenum">{{deviceStatus.online}}</b>在线</span>
                 </Radio>
-                <Radio label="outline">
-                    <span class="muneblack"><b class="outlinenum">0</b>离线</span>
+                <Radio label="offline">
+                    <span class="muneblack"><b class="outlinenum">{{deviceStatus.offline}}</b>离线</span>
                 </Radio>
             </RadioGroup>
         </div>
@@ -71,6 +71,8 @@ import minLogo from '@/assets/images/logozhedie.png'
 import '@/libs/particles.min.js'
 // import particlesConfig from '@/libs/particles.config.js'
 import './index.less'
+import { getDeviceOnline } from '@/api/user'
+
 export default {
   name: 'Main',
   components: {
@@ -84,7 +86,8 @@ export default {
   },
   data () {
     return {
-      devicestate: 'all',
+      deviceState: 'total',
+      deviceStatus: {},
       collapsed: false,
       sdierBgColor: '#001529',
       minLogo,
@@ -179,6 +182,14 @@ export default {
     handleShowTopMenu (name) {
       this.isShowTopMenu = name === 'device' || name === 'deviceSetting' || name === 'deviceAlarm' || name === 'deviceDetail' || name === 'deviceModel' || name === 'deviceHistory'
       this.selectedMenu = name
+    },
+    async getDeviceOnline () {
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      const userId = userInfo.userId
+      const res = await getDeviceOnline(userId)
+      if (res.data.code === 0) {
+        this.deviceStatus = res.data.data
+      }
     }
   },
   watch: {
@@ -212,6 +223,7 @@ export default {
         name: this.$config.homeName
       })
     }
+    this.getDeviceOnline()
     // particlesJS('particles', particlesConfig) //背景动画
   }
 }

@@ -1,18 +1,18 @@
 <template>
   <div>
     <Row :gutter="20">
-      <i-col :xxl="4" :md="24" :lg="8" v-for="(item, index) in deviceList" :key="index" >
-        <my-card>
-          <div class="box" @click="toDeviceDetail(item.deviceId)">
-            <div class="box-id">设备ID：{{item.deviceId}}</div>
-            <div class="box-name">{{item.name}}</div>
-            <div class="box-desc">
-              <p>{{item.model}}</p>
-              <p>{{item.type}}</p>
-              <p>{{item.SN}}</p>
+      <i-col :xxl="6" :md="24" :lg="8" v-for="(item, index) in storageList" :key="index" >
+        <div style="cursor: pointer" @click="toDeviceDetail(item.storageId)">
+          <my-card>
+            <div class="box">
+              <!-- <div class="box-id">仓库ID：{{item.storageId}}</div> -->
+              <div class="box-name">{{item.storageName}}</div>
+              <div class="box-desc">
+                <p>{{item.storageAddress}}</p>
+              </div>
             </div>
-          </div>
-        </my-card>
+          </my-card>
+        </div>
       </i-col>
     </Row>
   </div>
@@ -20,14 +20,15 @@
 
 <script>
 import MyCard from '_c/MyCard'
-import { getDevice } from '@/api/user'
+import { getDevice, getStorage } from '@/api/user'
 import { mapMutations, mapState } from 'vuex'
 export default {
   name: 'Storage',
   data () {
     return {
       storageId: '',
-      deviceList: []
+      deviceList: [],
+      storageList: []
     }
   },
   components: {
@@ -40,26 +41,39 @@ export default {
     ...mapMutations([
       'setDeviceId'
     ]),
-    async getDevice () {
-      const params = { storageId: this.storageId }
-      const res = await getDevice(params)
+    async getStorage () {
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      const userId = userInfo.userId
+      const res = await getStorage({ userId })
       console.log(res)
       if (res.data.code === 0) {
-        this.deviceList = res.data.data.list
+        this.storageList = res.data.data.list
       }
     },
-    toDeviceDetail (deviceId) {
-      this.setDeviceId(deviceId)
-      this.$router.push({
-        name: 'device',
-        params: { deviceId }
-      })
+    async getDevice (storageId) {
+      const params = { storageId }
+      const res = await getDevice(params)
+      if (res.data.code === 0) {
+        if (res.data.data.list.length === 0) {
+          this.$Message.warning({ background: true, content: '该仓库下无设备' })
+          return false
+        }
+        this.setDeviceId(res.data.data.list[0].deviceId)
+        this.$router.push({
+          name: 'device',
+          params: { deviceId: res.data.data.list[0].deviceId }
+        })
+        // this.deviceList = res.data.data.list
+      }
+    },
+    toDeviceDetail (storageId) {
+      this.getDevice(storageId)
     }
   },
   created () {
     // console.log(this.$store)
     // this.storageId = this.$route.path.split('/')[2]
-    this.getDevice()
+    this.getStorage()
   }
 }
 </script>

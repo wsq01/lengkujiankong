@@ -65,6 +65,7 @@ import { getRTDeviceData } from '@/api/hd'
 import { getHDeviceData } from '@/api/rt'
 import { getDate } from '@/libs/tools'
 export default {
+  name: 'DeviceHistory',
   data () {
     return {
       tabOption: [
@@ -408,12 +409,12 @@ export default {
           runCurrentB: item.runCurrentB + 'A',
           runCurrentC: item.runCurrentC + 'C',
           extraAlarm: item.extraAlarm === '0' ? '无' : '有',
-          tempAlarm: item.tempAlarm === '0' ? '无' : item.tempAlarm === '1' ? '下限报警' : '上线报警',
+          tempAlarm: item.tempAlarm === '0' ? '无' : item.tempAlarm === '1' ? '下限报警' : '上限报警',
           currentUnbalanceAlarm: item.currentUnbalanceAlarm === '0' ? '无' : '有',
           doorOpenAlarm: item.doorOpenAlarm === '0' ? '无' : '有',
           overvoltAlarm: item.overvoltAlarm === '0' ? '无' : '有',
           voltageUnbalanceAlarm: item.voltageUnbalanceAlarm === '0' ? '无' : '有',
-          currentAlarm: item.currentAlarm === '0' ? '无' : item.currentAlarm === '1' ? '下线报警' : '上线报警',
+          currentAlarm: item.currentAlarm === '0' ? '无' : item.currentAlarm === '1' ? '下线报警' : '上限报警',
           storageDetectorAlarm: item.storageDetectorAlarm === '0' ? '无' : '有',
           defrostDetectorAlarm: item.defrostDetectorAlarm === '0' ? '无' : '有',
           enviDetectorAlarm: item.enviDetectorAlarm === '0' ? '无' : '有',

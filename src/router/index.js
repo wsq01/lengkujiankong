@@ -25,27 +25,26 @@ const turnTo = (to, access, next) => {
   if (canTurnTo(to.name, access, router.options.routes)) next() // 有权限，可访问
   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 }
-const initStorage = (routers, storages) => {
-  routers.forEach(item => {
-    if (item.name === '_monitor') {
-      storages.forEach((sItem, sIndex) => {
-        item.children.push({
-          name: `_storage_${sItem.storageId}`,
-          path: `/storage/${sItem.storageId}`,
-          meta: {
-            title: sItem.storageName,
-            notCache: false
-          },
-          component: () => import('@/views/single-page/Storage.vue')
-        })
-      })
-    }
-  })
-  return routers
-}
+// const initStorage = (routers, storages) => {
+//   routers.forEach(item => {
+//     if (item.name === '_monitor') {
+//       storages.forEach((sItem, sIndex) => {
+//         item.children.push({
+//           name: `_storage_${sItem.storageId}`,
+//           path: `/storage/${sItem.storageId}`,
+//           meta: {
+//             title: sItem.storageName,
+//             notCache: false
+//           },
+//           component: () => import('@/views/single-page/Storage.vue')
+//         })
+//       })
+//     }
+//   })
+//   return routers
+// }
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
   ViewUI.LoadingBar.start()
   const token = getToken()
   if (!token && to.name !== LOGIN_PAGE_NAME) {
@@ -62,7 +61,6 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    console.log(store.state.user.hasGetInfo)
     if (store.state.user.hasGetInfo) {
       turnTo(to, store.state.user.access, next)
     } else {
@@ -74,7 +72,7 @@ router.beforeEach((to, from, next) => {
           //   asyncRouters = initStorage(asyncRouters, res)
           //   asyncRouters.forEach(item => router.options.routes.push(item))
           //   router.addRoutes(asyncRouters)
-          //   // console.log(router)
+          //   console.log(router)
           //   next({
           //     name: homeName // 跳转到homeName页
           //   })
@@ -86,7 +84,6 @@ router.beforeEach((to, from, next) => {
           next({
             name: homeName // 跳转到homeName页
           })
-          
           // turnTo(to, store.state.user.access, next)
         }
       }).catch(res => {

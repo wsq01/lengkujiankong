@@ -9,7 +9,8 @@ export default {
       selection: [],
       formItem: {},
       submitType: '',
-      modal: false
+      modal: false,
+      modalLoading: true
     }
   },
   methods: {
@@ -64,32 +65,40 @@ export default {
         this.tableData = res.data.data.list
         this.total = res.data.data.total
       } else {
-        this.$Message.warning(res.data.message)
+        this.$Message.warning({ background: true, content: res.data.message })
       }
     },
     addSuccess (res) {
       if (res.data.code === 0) {
         this.modal = false
-        this.$Message.success('添加成功！')
+        this.$Message.success({ background: true, content: '添加成功！' })
         this.getItems()
       } else {
-        this.$Message.warning(res.data.message)
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+        this.$Message.warning({ background: true, content: res.data.message })
       }
     },
     editSuccess (res) {
       if (res.data.code === 0) {
         this.modal = false
-        this.$Message.success('修改成功！')
+        this.$Message.success({ background: true, content: '修改成功！' })
       } else {
-        this.$Message.warning(res.data.message)
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+        this.$Message.warning({ background: true, content: res.data.message })
       }
     },
     deleteSuccess (res, index) {
       if (res.data.code === 0) {
-        this.$Message.success('删除成功！')
+        this.$Message.success({ background: true, content: '删除成功！' })
         this.tableData.splice(index, 1)
       } else {
-        this.$Message.error(res.data.message)
+        this.$Message.error({ background: true, content: res.data.message })
       }
     },
     deleteBatchSuccess (res) {
@@ -97,7 +106,7 @@ export default {
         this.selection.forEach((item, index) => {
           this.tableData.forEach((sItem, sIndex) => {
             if (sItem.id === item.id) {
-              this.$Message.success('删除成功！')
+              this.$Message.success({ background: true, content: '删除成功！' })
               this.tableData.splice(sIndex, 1)
             }
           })

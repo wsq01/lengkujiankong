@@ -35,7 +35,7 @@
         <Page :total="total" show-sizer show-total show-elevator @on-change="handleChangePage" @on-page-size-change="handlePageSizeChange" style="margin: 10px 0 0"></Page>
       </i-col>
     </Row>
-    <Modal v-model="modal" :mask-closable="false" :transfer="true" title=" " @on-ok="submit">
+    <Modal v-model="modal" :loading="modalLoading" :mask-closable="false" :transfer="true" title=" " @on-ok="submit">
         <Row type="flex" justify="center">
           <i-col span="24">
             <Form :model="formItem" :label-width="100">
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { getUser, deleteUser, addUser, editUser, getRole } from '@/api/user'
+import { getUser, deleteUser, addUser, editUser, getRole, deleteUserRelRole, addUserRelRole } from '@/api/user'
 import minxin from '@/assets/js/mixin'
 import MyCard from '_c/MyCard'
 
@@ -140,7 +140,8 @@ export default {
         }
       ],
       formItemLabel: ['用户名', '用户名(英文)', '密码', '角色', '手机号', '邮箱', '备注'],
-      roleList: []
+      roleList: [],
+      oldFormItem: {}
     }
   },
   methods: {
@@ -159,23 +160,47 @@ export default {
       this.deleteSuccess(res, index)
     },
     handleSelectRole (e) {
-      this.formItem.roleName = e.label
+      this.formItem.roleName = e.label || ''
     },
     async submit () {
       if (this.submitType === 'add') {
         const res = await addUser(this.formItem)
         this.addSuccess(res)
       } else {
+        if (this.formItem.roleName) {
+          this.deleteUserRelRole()
+          this.addUserRelRole()
+        }
         const res = await editUser(this.formItem)
         this.editSuccess(res)
+      }
+    },
+    async addUserRelRole () {
+      const res = await addUserRelRole({ userId: this.formItem.userId, roleId: this.formItem.roleId })
+      if (res.data.code !== 0) {
+        this.$Message.warning({ background: true, content: res.data.message })
+      }
+    },
+    async deleteUserRelRole () {
+      const res = await deleteUserRelRole({ uid: this.oldFormItem.userId, rid: this.oldFormItem.roleId })
+      if (res.data.code !== 0) {
+        this.$Message.warning({ background: true, content: res.data.message })
       }
     },
     async getRoleList () {
       const res = await getRole()
       this.roleList = res.data.data.list
+    },
+    editItem (row, index) {
+      console.log(row)
+      this.submitType = 'edit'
+      this.formItem = row
+      this.modal = !this.modal
+      this.oldFormItem = row
     }
   },
   mounted () {
+    this.oldFormItem = this.formItem
     this.getItems()
     this.getRoleList()
   }

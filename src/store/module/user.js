@@ -1,4 +1,4 @@
-import { login, getMenus, getStorageByUid } from '@/api/user'
+import { login, getMenus, getStorage } from '@/api/user'
 import { setToken, getToken, getUserControlMenuByRouter } from '@/libs/util'
 import { defaultRoutes } from '@/router/routers'
 
@@ -83,7 +83,7 @@ export default {
     async getStorage ({ state, commit }) {
       const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
       try {
-        const res = await getStorageByUid(userInfo.userId)
+        const res = await getStorage({ userId: userInfo.userId })
         commit('setStorage', res.data.data.list)
       } catch (error) {
         console.log(error)

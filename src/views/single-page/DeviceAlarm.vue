@@ -58,6 +58,7 @@ export default {
   components: {
     MyCard
   },
+  name: 'DeviceAlarm',
   data () {
     return {
       columns: [
