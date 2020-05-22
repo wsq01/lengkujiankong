@@ -3,7 +3,7 @@ import config from '@/config'
 const baseUrl = config.baseUrl.csrc
 
 const axios = new HttpRequest(baseUrl)
-const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {}
 const UID = userInfo.userId
 const getItem = (url, params) => {
   return axios.request({
