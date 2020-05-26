@@ -1,4 +1,5 @@
-import { login, getMenus, getStorage } from '@/api/user'
+import { login, getStorage } from '@/api/user'
+import { getRTDeviceInfo } from '@/api/hd'
 import { setToken, getToken, getUserControlMenuByRouter } from '@/libs/util'
 import { defaultRoutes } from '@/router/routers'
 
@@ -67,24 +68,26 @@ export default {
       })
     },
     async getMenus ({ dispatch, commit }) {
-      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-      try {
-        const res = await getMenus({ roleId: userInfo.role[0].roleId })
-        if (res.data && res.data.code === 0) {
-          await dispatch('getStorage')
-          commit('setHasGetInfo', true)
-          commit('setUserMenu', res.data.data.list)
-        }
-        return res
-      } catch (error) {
-        console.log(error)
-      }
+      // const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      // try {
+      //   const res = await getMenus({ roleId: userInfo.role[0].roleId })
+      //   if (res.data && res.data.code === 0) {
+      await dispatch('getStorage')
+      commit('setHasGetInfo', true)
+      // commit('setUserMenu', res.data.data.list)
+      //   }
+      //   return res
+      // } catch (error) {
+      //   console.log(error)
+      // }
     },
     async getStorage ({ state, commit }) {
+      commit('setHasGetInfo', true)
       const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
       try {
-        const res = await getStorage({ userId: userInfo.userId })
+        const res = await getRTDeviceInfo({ userId: userInfo.userId })
         commit('setStorage', res.data.data.list)
+        return res.data.data.list
       } catch (error) {
         console.log(error)
       }

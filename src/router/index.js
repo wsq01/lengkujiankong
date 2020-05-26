@@ -64,28 +64,16 @@ router.beforeEach((to, from, next) => {
     if (store.state.user.hasGetInfo) {
       turnTo(to, store.state.user.access, next)
     } else {
-      const result = store.dispatch('getMenus')
+      const result = store.dispatch('getStorage')
       result.then(res => {
-        if (res.data && res.data.code === 0) {
-          // let asyncRouters = initAsyncRouter(res[0].data.data.list, asyncRoutes)
-          // store.dispatch('getStorage').then(res => {
-          //   asyncRouters = initStorage(asyncRouters, res)
-          //   asyncRouters.forEach(item => router.options.routes.push(item))
-          //   router.addRoutes(asyncRouters)
-          //   console.log(router)
-          //   next({
-          //     name: homeName // 跳转到homeName页
-          //   })
-          //   // turnTo(to, store.state.user.access, next)
-          // })
-          const asyncRouters = initAsyncRouter(res.data.data.list, asyncRoutes)
-          asyncRouters.forEach(item => router.options.routes.push(item))
-          router.addRoutes(asyncRouters)
-          next({
-            name: homeName // 跳转到homeName页
-          })
-          // turnTo(to, store.state.user.access, next)
+        console.log(res)
+        if (res.length !== 0) {
+          asyncRoutes.forEach(item => router.options.routes.push(item))
+          router.addRoutes(asyncRoutes)
         }
+        next({
+          name: homeName // 跳转到homeName页
+        })
       }).catch(res => {
         setToken('')
         // Cookies.remove('organizationId')

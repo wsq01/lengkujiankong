@@ -1,19 +1,25 @@
 <template>
   <my-card :isShowTitle="false">
+    <div>
+      参数设置：
+      <Select v-model="selectedItem" style="width:120px" @on-change="handleSelectedChange">
+        <Option v-for="item in selectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+    </div>
     <Form :model="deviceModelForm" :inline="true" label-position="left">
       <List>
-        <ListItem v-for="(item, index) in deviceModel" :key="index" v-show="!item.isHidden">
-          <FormItem :label="item.label" class="list-item" v-if="item.type === 'input' || item.type === undefined">
+        <ListItem v-for="(item, index) in deviceModel" :key="index" v-if="item.model === selectedItem">
+          <FormItem :label="item.label" class="list-item" v-if="(item.type === 'input' && selectedItem === item.model) || (item.type === undefined &&  selectedItem === item.model)">
             <Input v-model="deviceModelForm[item.key]">
               <span v-if="item.append" slot="append">{{item.append}}</span>
             </Input>
           </FormItem>
-          <FormItem :label="item.label" class="list-item" v-else-if="item.type === 'select'">
+          <FormItem :label="item.label" class="list-item" v-else-if="item.type === 'select' && item.model === selectedItem">
             <Select v-model="deviceModelForm[item.key]">
               <Option v-for="(sItem, sIndex) in item.option" :value="sItem.key" :key="sIndex">{{sItem.name}}</Option>
             </Select>
           </FormItem>
-          <FormItem :label="item.label" class="timepicker-item" v-else-if="item.type==='timepicker'">
+          <FormItem :label="item.label" class="timepicker-item" v-else-if="item.type==='timepicker' && item.model === selectedItem">
             <TimePicker format="HH:mm" placeholder="请选择时间" @on-change="timepickerChange($event, item.key)" style="width: 80px" :value="deviceModelForm[item.key]"></TimePicker>
           </FormItem>
         </ListItem>
@@ -24,7 +30,7 @@
 
 <script>
 import MyCard from '_c/MyCard'
-import { getDeviceModel, editDeviceModel } from '@/api/user'
+import { getDeviceModel } from '@/api/user'
 import { editServerDeviceModel } from '@/api/server'
 import { debounce } from '@/libs/tools'
 
@@ -33,36 +39,56 @@ export default {
   data () {
     return {
       deviceModel: [
-        { key: 'deviceId', label: '设备ID', value: '', isHidden: true },
-        { key: 'masterToggle', label: '总开关', value: '', type: 'select', option: [{ name: '开', key: '1' }, { name: '关', key: '0' }] },
-        { key: 'cmOpenMode', label: '冷机开机模式', value: '', type: 'select', option: [{ name: '先开冷机再开风机', key: '1' }, { name: '同时开冷机和风机', key: '2' }] },
-        { key: 'fanOpenMode', label: '风机开机模式', value: '', type: 'select', option: [{ name: '受控开', key: '1' }, { name: '一直开', key: '2' }] },
-        { key: 'powerMode', label: '峰谷电模式', value: '', type: 'select', option: [{ name: '无效', key: '0' }, { name: '有效', key: '1' }] },
-        { key: 'defrostMode', label: '化霜模式', value: '', type: 'select', option: [{ name: '固定周期化霜', key: '1' }, { name: '固定北京时间化霜', key: '0' }] },
-        { key: 'cmStartTemp', label: '冷机开机温度', vlaue: '', append: '°C' },
-        { key: 'cmStopTemp', label: '冷机停机温度', value: '', append: '°C' },
-        { key: 'highTempAlarm', label: '高温告警温度', value: '', append: '°C' },
-        { key: 'lowTempAlarm', label: '低温告警温度', value: '', append: '°C' },
-        { key: 'defrostStopTemp', label: '化霜终止温度', value: '', append: '°C' },
-        { key: 'fanStartTemp', label: '风机启动温度', value: '', append: '°C' },
-        { key: 'defrostDrip', label: '化霜滴水时间', value: '', append: '秒' },
-        { key: 'defrostDuring', label: '化霜持续时间', value: '', append: '秒' },
-        { key: 'defrostCycle', label: '化霜周期时间', value: '', append: '秒' },
-        { key: 'defrostBJT1', label: '化霜北京时间1', value: '', type: 'timepicker' },
-        { key: 'defrostBJT2', label: '化霜北京时间2', value: '', type: 'timepicker' },
-        { key: 'defrostBJT3', label: '化霜北京时间3', value: '', type: 'timepicker' },
-        { key: 'cmStopIntv', label: '压机停机保护时间', value: '', append: '秒' },
-        { key: 'cmOnOffIntv', label: '压机启停间隔时间', value: '', append: '秒' },
-        { key: 'cmRunMax', label: '压机最长运行时间', value: '', append: '分钟' },
-        { key: 'alarmDelay', label: '超温告警延时时间', value: '', append: '秒' },
-        { key: 'fanStopDelay', label: '风机停机延时时间', value: '', append: '秒' },
-        { key: 'fanStartDelay', label: '风机开机延时时间', value: '', append: '秒' },
-        { key: 'defrostDetectorFix', label: '化霜温度探头修正', value: '' },
-        { key: 'enviDetectorFix', label: '环境温度探头修正', value: '' },
-        { key: 'storageDetectorFix', label: '库温探头修正', value: '' }
+        { key: 'deviceId', label: '设备ID', value: '', model: 'xxxx' },
+        { key: 'masterToggle', label: '总开关', value: '', type: 'select', option: [{ name: '开', key: '1' }, { name: '关', key: '0' }], model: 'off' },
+        { key: 'cmOpenMode', label: '冷机开机模式', value: '', type: 'select', option: [{ name: '先开冷机再开风机', key: '1' }, { name: '同时开冷机和风机', key: '2' }], model: 'lj' },
+        { key: 'fanOpenMode', label: '风机开机模式', value: '', type: 'select', option: [{ name: '受控开', key: '1' }, { name: '一直开', key: '2' }], model: 'off' },
+        { key: 'powerMode', label: '峰谷电模式', value: '', type: 'select', option: [{ name: '无效', key: '0' }, { name: '有效', key: '1' }], model: 'off' },
+        { key: 'defrostMode', label: '化霜模式', value: '', type: 'select', option: [{ name: '固定周期化霜', key: '1' }, { name: '固定北京时间化霜', key: '0' }], model: 'off' },
+        { key: 'cmStartTemp', label: '冷机开机温度', vlaue: '', append: '°C', model: 'lj' },
+        { key: 'cmStopTemp', label: '冷机停机温度', value: '', append: '°C', model: 'lj' },
+        { key: 'highTempAlarm', label: '高温告警温度', value: '', append: '°C', model: 'temp' },
+        { key: 'lowTempAlarm', label: '低温告警温度', value: '', append: '°C', model: 'temp' },
+        { key: 'defrostStopTemp', label: '化霜终止温度', value: '', append: '°C', model: 'defrost' },
+        { key: 'fanStartTemp', label: '风机启动温度', value: '', append: '°C', model: 'fan' },
+        { key: 'defrostDrip', label: '化霜滴水时间', value: '', append: '秒', model: 'fan' },
+        { key: 'defrostDuring', label: '化霜持续时间', value: '', append: '秒', model: 'defrost' },
+        { key: 'defrostCycle', label: '化霜周期时间', value: '', append: '秒', model: 'defrost' },
+        { key: 'defrostBJT1', label: '化霜北京时间1', value: '', type: 'timepicker', model: 'defrost' },
+        { key: 'defrostBJT2', label: '化霜北京时间2', value: '', type: 'timepicker', model: 'defrost' },
+        { key: 'defrostBJT3', label: '化霜北京时间3', value: '', type: 'timepicker', model: 'defrost' },
+        { key: 'cmStopIntv', label: '压机停机保护时间', value: '', append: '秒', model: 'cm' },
+        { key: 'cmOnOffIntv', label: '压机启停间隔时间', value: '', append: '秒', model: 'cm' },
+        { key: 'cmRunMax', label: '压机最长运行时间', value: '', append: '分钟', model: 'cm' },
+        { key: 'alarmDelay', label: '超温告警延时时间', value: '', append: '秒', model: 'temp' },
+        { key: 'fanStopDelay', label: '风机停机延时时间', value: '', append: '秒', model: 'fan' },
+        { key: 'fanStartDelay', label: '风机开机延时时间', value: '', append: '秒', model: 'fan' },
+        { key: 'defrostDetectorFix', label: '化霜温度探头修正', value: '', model: 'defrost' },
+        { key: 'enviDetectorFix', label: '环境温度探头修正', value: '', model: 'temp' },
+        { key: 'storageDetectorFix', label: '库温探头修正', value: '', model: 'temp' }
       ],
       isShowModal: false,
-      deviceModelForm: {}
+      deviceModelForm: {},
+      selectedItem: 'temp',
+      selectList: [{
+        label: '温度类',
+        value: 'temp'
+      }, {
+        label: '开关机类',
+        value: 'off'
+      }, {
+        label: '风机类',
+        value: 'fan'
+      }, {
+        label: '压机类',
+        value: 'cm'
+      }, {
+        label: '冷机类',
+        value: 'lj'
+      }, {
+        label: '化霜类',
+        value: 'defrost'
+      }]
     }
   },
   props: ['deviceId'],
@@ -92,14 +118,15 @@ export default {
         } else if (val.order === 'reset') {
         } else if (val.order === 'param') {
         } else if (val.order === 'update') {
-          this.modal1 = true
-          this.progress = val.count / val.total
         }
       } else if (val.result && val.result !== 'succeed') {
       } else {}
     }
   },
   methods: {
+    handleSelectedChange () {
+      this.deviceModel = JSON.parse(JSON.stringify(this.deviceModel))
+    },
     computedSocketMsg () {
       if (!this.$store.state.app.socketMsg) return
       return JSON.parse(this.$store.state.app.socketMsg)
@@ -122,7 +149,7 @@ export default {
         })
         // this.$Message.success({ background: true, content: '修改成功！' })
       } else {
-        this.$Message.success({ background: true, content: res.data.message })
+        this.$Message.error({ background: true, content: res.data.message })
       }
     },
     initDeviceModel (reqDeviceModel, dataDeviceModel) {

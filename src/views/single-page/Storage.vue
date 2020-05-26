@@ -1,53 +1,86 @@
 <template>
-  <div>
-    <Row :gutter="20">
+  <Scroll ref="scrollDom" class="scroll-container" :on-reach-bottom="handleReachBottom" :height="800" :distance-to-edge="[1, 1]">
+    <Row :gutter="20" style="margin: 0">
       <i-col :xxl="6" :md="24" :lg="8" v-for="(item, index) in storageList" :key="index" >
-        <div style="cursor: pointer" @click="toDeviceDetail(item.storageId)">
-          <my-card>
-            <div class="box">
-              <!-- <div class="box-id">仓库ID：{{item.storageId}}</div> -->
+          <div style="cursor: pointer" @click="toDeviceDetail(item.storageId)">
+            <my-card class="box">
               <div class="box-name">{{item.storageName}}</div>
               <div class="box-desc">
-                <p>{{item.storageAddress}}</p>
+                <div class="desc-item">
+                  <img :src="item.online === 0 ? require('../../assets/images/device-online@2x.png') : require('../../assets/images/device-offline@2x.png')" alt="">
+                  <div>
+                    <p>{{item.online === 0 ? '在线': '离线'}}</p>
+                    <span></span>
+                    <p>系统状态</p>
+                  </div>
+                </div>
+                <div class="desc-item">
+                  <img style="width: 15px" :src="item.storageTemp < 60 ? require('../../assets/images/device-temp@2x.png') : require('../../assets/images/device-temp-err@2x.png')" alt="">
+                  <div>
+                    <p>{{item.storageTemp}}°C</p>
+                    <span></span>
+                    <p>冷库温度</p>
+                  </div>
+                </div>
+                <div class="desc-item">
+                  <p style="width: 20px" v-if="item.state === 0 || item.state === 4">--</p>
+                  <img v-else :src="item.state === 1 ? require('../../assets/images/device-zl@2x.png') : item.state === 2 ? require('../../assets/images/device-hs@2x.png') : require('../../assets/images/device-ds@2x.png')" alt="">
+                  <div>
+                    <p>{{item.state === 0 ? '空闲' : item.state === 1 ? '制冷' : item.state === 2 ? '化霜' : item.state === 3 ? '滴水' : '异常'}}</p>
+                    <span></span>
+                    <p>启用状态</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </my-card>
-        </div>
+            </my-card>
+          </div>
       </i-col>
     </Row>
-  </div>
+  </Scroll>
 </template>
 
 <script>
 import MyCard from '_c/MyCard'
-import { getDevice, getStorage } from '@/api/user'
-import { mapMutations, mapState } from 'vuex'
+import { getDevice } from '@/api/user'
+import { getRTDeviceInfo } from '@/api/hd'
+import { mapMutations } from 'vuex'
 export default {
   name: 'Storage',
   data () {
     return {
       storageId: '',
       deviceList: [],
-      storageList: []
+      storageList: [],
+      scrollHeight: 0,
+      size: 10,
+      pageIndex: 1
     }
   },
   components: {
     MyCard
   },
-  computed: {
-    ...mapState(['storages'])
-  },
   methods: {
     ...mapMutations([
       'setDeviceId'
     ]),
-    async getStorage () {
+    handleReachBottom () {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          this.getStorage({ index: ++this.pageIndex })
+          resolve()
+        }, 2000)
+      })
+    },
+    async getStorage (params) {
       const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
       const userId = userInfo.userId
-      const res = await getStorage({ userId })
-      console.log(res)
+      const obj = { userId }
+      if (params) {
+        Object.assign(obj, params)
+      }
+      const res = await getRTDeviceInfo(obj)
       if (res.data.code === 0) {
-        this.storageList = res.data.data.list
+        this.storageList.push(...res.data.data.list)
       }
     },
     async getDevice (storageId) {
@@ -63,7 +96,6 @@ export default {
           name: 'device',
           params: { deviceId: res.data.data.list[0].deviceId }
         })
-        // this.deviceList = res.data.data.list
       }
     },
     toDeviceDetail (storageId) {
@@ -71,9 +103,10 @@ export default {
     }
   },
   created () {
-    // console.log(this.$store)
-    // this.storageId = this.$route.path.split('/')[2]
     this.getStorage()
+  },
+  mounted () {
+    this.scrollHeight = this.$refs.scrollDom.$parent.$parent.$el.offsetHeight
   }
 }
 </script>
@@ -93,10 +126,30 @@ export default {
   .box-desc {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
     align-items: center;
+    margin: 20px auto;
+    .desc-item {
+      display: flex;
+      align-items: center;
+      img {
+        display: block;
+        width: 30px;
+        height: 30px;
+      }
+    }
     p {
-      padding: 0 10px;
+      text-align: center;
+      width: 70px;
+    }
+    span {
+      display: block;
+      margin: 3px auto;
+      padding: 0 6px;
+      height: 1px;
+      width: 50px;
+      background: rgba(65, 252, 230, 1)
     }
   }
 }

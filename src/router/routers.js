@@ -38,12 +38,23 @@ export const defaultRoutes = [
         name: 'home',
         meta: {
           // hideInMenu: true,
-          title: '首页',
+          title: '所有监控',
           notCache: true,
-          icon: 'md-home'
+          icon: 'md-cube'
         },
-        component: () => import('@/views/single-page/Home.vue')
+        component: () => import('@/views/single-page/Storage.vue')
       },
+      // {
+      //   path: '/home',
+      //   name: 'home',
+      //   meta: {
+      //     hideInMenu: true,
+      //     title: '首页',
+      //     notCache: true,
+      //     icon: 'md-home'
+      //   },
+      //   component: () => import('@/views/single-page/Home.vue')
+      // },
       {
         path: '/device/:deviceId',
         name: 'device',
@@ -125,27 +136,6 @@ export const defaultRoutes = [
       hideInMenu: true
     },
     component: () => import('@/views/error-page/404.vue')
-  }
-]
-export const asyncRoutes = [
-  {
-    path: '/mystorage',
-    name: '_mystorage',
-    component: Main,
-    meta: {
-    },
-    children: [
-      {
-        path: '',
-        name: 'mystorage',
-        props: true,
-        meta: {
-          title: '我的仓库',
-          icon: 'md-cube'
-        },
-        component: () => import('@/views/single-page/Storage.vue')
-      }
-    ]
   },
   {
     path: '/user',
@@ -215,6 +205,27 @@ export const asyncRoutes = [
       }
     ]
   }
+]
+export const asyncRoutes = [
+  // {
+  //   path: '/mystorage',
+  //   name: '_mystorage',
+  //   component: Main,
+  //   meta: {
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'mystorage',
+  //       props: true,
+  //       meta: {
+  //         title: '我的仓库',
+  //         icon: 'md-cube'
+  //       },
+  //       component: () => import('@/views/single-page/Storage.vue')
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/userrelstorage',
   //   name: '_userrelstorage',

@@ -7,23 +7,23 @@
             <img src="../../assets/images/model@2x.png" />
           </div>
           <div class="showtotal">
-            <div class="item" v-if="deviceModel.cmStartTemp">
+            <div class="item">
               <i-circle :percent="80" stroke-color="#FFE167">
-                <span class="cricleborder" style="font-size:24px">{{deviceModel.cmStartTemp}}°C</span>
+                <span class="cricleborder" style="font-size:24px">{{leftData.temp}}°C</span>
               </i-circle>
-              <span class="itemdesc">冷机开机温度</span>
+              <span class="itemdesc">冷库温度</span>
             </div>
-            <div class="item" v-if="deviceModel.cmStopTemp">
+            <div class="item">
               <i-circle :percent="80" stroke-color="#67E4FF">
-                <span class="cricleborder" style="font-size:24px">{{deviceModel.cmStopTemp}}°C</span>
+                <span class="cricleborder" style="font-size:24px">{{leftData.power}}W</span>
               </i-circle>
-              <span class="itemdesc">冷机停机温度</span>
+              <span class="itemdesc">实时功率</span>
             </div>
-            <div class="item" v-if="deviceModel.fanStartTemp">
+            <div class="item">
               <i-circle :percent="80" stroke-color="#67FF95">
-                <span class="cricleborder" style="font-size:24px">{{deviceModel.fanStartTemp === '0' ? '无' : '有'}}</span>
+                <span class="cricleborder" style="font-size:24px">{{leftData.alarmCount}}</span>
               </i-circle>
-              <span class="itemdesc">风机启动温度</span>
+              <span class="itemdesc">报警情况</span>
             </div>
           </div>
         </my-card>
@@ -59,6 +59,7 @@
 import Charts from '_c/Charts'
 import MyCard from '_c/MyCard'
 import { getDeviceModel, getDevice } from '@/api/user'
+import { getRTDeviceMainInfo } from '@/api/hd'
 import { getHDeviceDataTrend } from '@/api/rt'
 
 export default {
@@ -83,7 +84,8 @@ export default {
           { key: 'SN', name: 'SN', value: '' }
         ]
       },
-      leftChartList: []
+      leftChartList: [],
+      leftData: {}
     }
   },
   props: ['deviceId'],
@@ -99,6 +101,12 @@ export default {
       if (res.data.code === 0) {
         // this.deviceDesc = res.data.data.list[0]
         this.initDeviceDesc(res.data.data.list[0])
+      }
+    },
+    async getRTDeviceMainInfo () {
+      const res = await getRTDeviceMainInfo(this.deviceId)
+      if (res.data.code === 0) {
+        this.leftData = res.data.data
       }
     },
     async getHDeviceDataTrend () {
@@ -214,6 +222,7 @@ export default {
     this.getDevice()
     this.getDeviceModel()
     this.getHDeviceDataTrend()
+    this.getRTDeviceMainInfo()
   }
 }
 </script>

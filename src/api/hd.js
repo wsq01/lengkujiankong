@@ -29,3 +29,7 @@ const getItem = (url, params) => {
 export const getDeviceAlarm = (params) => getItem('/csrc/device/hd/deviceAlarm', params)
 
 export const getRTDeviceData = (params) => getItem('/csrc/device/rt/deviceData', params)
+
+export const getRTDeviceInfo = (params) => getItem('/csrc/device/rt/deviceInfo', params)
+
+export const getRTDeviceMainInfo = (params) => getItem('/csrc/device/rt/mainInfo/' + params)
