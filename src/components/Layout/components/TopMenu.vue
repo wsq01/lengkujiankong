@@ -24,7 +24,7 @@ export default {
         { label: '参数设置', value: 'deviceDetail' },
         { label: '报警管理', value: 'deviceAlarm' },
         // { label: '参数设置', value: 'deviceModel' },
-        { label: '数据管理', value: 'deviceHistory' }
+        { label: '历史数据', value: 'deviceHistory' }
       ],
       selectedItem: 'device'
     }
@@ -52,6 +52,7 @@ export default {
 </script>
 
 <style lang="less">
+@boder-color: #182E84;
 .top-menu {
   margin: 20px auto 0;
   padding-right: 30px;
@@ -66,16 +67,32 @@ export default {
     background: rgba(24, 46, 132, 1);
     max-height: fit-content;
   }
+  .ivu-select-item {
+    color: #fff
+  }
 }
 .my-radio-group {
   label.ivu-radio-wrapper {
+    color: #fff;
     background: transparent;
-    border-color: #2d8cf0;
-    border-left: 1px solid #2d8cf0 !important;
+    border-top: 1px solid @boder-color !important;
+    border-bottom: 1px solid @boder-color !important;
+  }
+  label:nth-child(1) {
+    border-right: none;
+    border-left: 1px solid @boder-color !important;
+  }
+  label:nth-child(2) {
+    border-left: none !important;
+    border-right: 1px solid @boder-color !important;
   }
   label.ivu-radio-wrapper-checked {
-    background: rgba(24, 46, 132, 1);
-    color: rgba(241, 184, 31, 1);
+    box-shadow: 0 0 0 0 transparent;
+    background: @boder-color;
+    color: #1FCCF1;
+  }
+  .ivu-radio-group-button .ivu-radio-wrapper-checked.ivu-radio-focus:first-child {
+    box-shadow: 0 0 0 0 transparent !important;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <Scroll ref="scrollDom" class="scroll-container" :on-reach-bottom="handleReachBottom" :height="800" :distance-to-edge="[1, 1]">
     <Row :gutter="20" style="margin: 0">
       <i-col :xxl="6" :md="24" :lg="8" v-for="(item, index) in storageList" :key="index" >
-          <div style="cursor: pointer" @click="toDeviceDetail(item.storageId)">
+          <div style="cursor: pointer" @click="toDeviceDetail(item.deviceId)">
             <my-card class="box">
               <div class="box-name">{{item.storageName}}</div>
               <div class="box-desc">
@@ -41,7 +41,7 @@
 
 <script>
 import MyCard from '_c/MyCard'
-import { getDevice } from '@/api/user'
+import { getDeviceById } from '@/api/user'
 import { getRTDeviceInfo } from '@/api/hd'
 import { mapMutations } from 'vuex'
 export default {
@@ -83,23 +83,22 @@ export default {
         this.storageList.push(...res.data.data.list)
       }
     },
-    async getDevice (storageId) {
-      const params = { storageId }
-      const res = await getDevice(params)
+    async getDevice (deviceId) {
+      const res = await getDeviceById(deviceId)
       if (res.data.code === 0) {
-        if (res.data.data.list.length === 0) {
+        if (!res.data.data) {
           this.$Message.warning({ background: true, content: '该仓库下无设备' })
           return false
         }
-        this.setDeviceId(res.data.data.list[0].deviceId)
+        this.setDeviceId(res.data.data.deviceId)
         this.$router.push({
           name: 'device',
-          params: { deviceId: res.data.data.list[0].deviceId }
+          params: { deviceId: res.data.data.deviceId }
         })
       }
     },
-    toDeviceDetail (storageId) {
-      this.getDevice(storageId)
+    toDeviceDetail (deviceId) {
+      this.getDevice(deviceId)
     }
   },
   created () {

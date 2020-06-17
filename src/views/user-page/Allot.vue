@@ -90,7 +90,7 @@ export default {
       this.getSuccess(res)
     },
     async deleteAllot (row, index) {
-      const res = await deleteUserRelStorage(row.userId || '', row.storageId || '')
+      const res = await deleteUserRelStorage({ uid: row.userId, sid: row.storageId })
       if (res.data.code === 0) {
         const res2 = await editStorage({ isUse: '0', id: row.storageId })
         if (res2.data.code === 0) {

@@ -74,6 +74,7 @@ export const deleteRole = (params) => deleteItem('/csrc/sys/role', params)
 export const addRole = (params) => addItem('/csrc/sys/role', params)
 // 设备管理
 export const getDevice = (params) => getItem('/csrc/sys/device', params)
+export const getDeviceById = (params) => getItem('/csrc/sys/device/' + params)
 export const getDeviceOnline = (params) => getItem('/csrc/sys/device/online/' + params)
 export const getDeviceBySN = (params) => getItem('/csrc/sys/device/SN', params)
 export const editDevice = (params) => editItem('/csrc/sys/device', params)
@@ -109,7 +110,7 @@ export const addRoleRelMenu = (params) => addItem('/csrc/sys/roleRelMenu', param
 // 用户和仓库关联管理
 export const getUserRelStorage = (params) => getItem('/csrc/sys/userRelStorage', params)
 export const editUserRelStorage = (params) => editItem('/csrc/sys/userRelStorage', params)
-export const deleteUserRelStorage = (uid, sid) => deleteItem('/csrc/sys/userRelStorage/user/' + uid + '/storage/' + sid, '')
+export const deleteUserRelStorage = (params) => deleteItem2('/csrc/sys/userRelStorage', params)
 export const addUserRelStorage = (params) => addItem('/csrc/sys/userRelStorage', params)
 // 用户和角色关联管理
 export const getUserRelRole = (params) => getItem('/csrc/sys/userRelRole', params)

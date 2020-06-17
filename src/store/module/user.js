@@ -1,4 +1,4 @@
-import { login, getStorage } from '@/api/user'
+import { login } from '@/api/user'
 import { getRTDeviceInfo } from '@/api/hd'
 import { setToken, getToken, getUserControlMenuByRouter } from '@/libs/util'
 import { defaultRoutes } from '@/router/routers'

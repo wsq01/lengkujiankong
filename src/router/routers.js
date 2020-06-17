@@ -90,17 +90,6 @@ export const defaultRoutes = [
         component: () => import('@/views/single-page/DeviceDetail.vue')
       },
       {
-        path: '/deviceModel',
-        name: 'deviceModel',
-        props: true,
-        meta: {
-          hideInMenu: true,
-          title: '参数设置',
-          notCache: true
-        },
-        component: () => import('@/views/single-page/DeviceModel.vue')
-      },
-      {
         path: '/deviceHistory',
         name: 'deviceHistory',
         props: true,

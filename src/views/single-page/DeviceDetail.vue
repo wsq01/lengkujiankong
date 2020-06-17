@@ -1,28 +1,30 @@
 <template>
-  <my-card :isShowTitle="false">
+  <my-card :isShowTitle="false" class="detail-container">
     <div>
       参数设置：
       <Select v-model="selectedItem" style="width:120px" @on-change="handleSelectedChange">
         <Option v-for="item in selectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </div>
-    <Form :model="deviceModelForm" :inline="true" label-position="left">
+    <Form ref="formDynamic" :model="deviceModelForm" :inline="true" label-position="left" :rules="ruleValidate">
       <List>
-        <ListItem v-for="(item, index) in deviceModel" :key="index" v-if="item.model === selectedItem">
-          <FormItem :label="item.label" class="list-item" v-if="(item.type === 'input' && selectedItem === item.model) || (item.type === undefined &&  selectedItem === item.model)">
-            <Input v-model="deviceModelForm[item.key]">
+        <div v-for="(item, index) in deviceModel" :key="index">
+          <ListItem v-if="item.model === selectedItem">
+          <FormItem :prop="item.key" :label="item.label" class="list-item" v-if="(item.type === 'input' && selectedItem === item.model) || (item.type === undefined &&  selectedItem === item.model)">
+            <Input v-model="deviceModelForm[item.key]" type="number">
               <span v-if="item.append" slot="append">{{item.append}}</span>
             </Input>
           </FormItem>
-          <FormItem :label="item.label" class="list-item" v-else-if="item.type === 'select' && item.model === selectedItem">
+          <FormItem :prop="item.key" :label="item.label" class="list-item" v-else-if="item.type === 'select' && item.model === selectedItem">
             <Select v-model="deviceModelForm[item.key]">
               <Option v-for="(sItem, sIndex) in item.option" :value="sItem.key" :key="sIndex">{{sItem.name}}</Option>
             </Select>
           </FormItem>
-          <FormItem :label="item.label" class="timepicker-item" v-else-if="item.type==='timepicker' && item.model === selectedItem">
+          <FormItem :prop="item.key" :label="item.label" class="timepicker-item" v-else-if="item.type==='timepicker' && item.model === selectedItem">
             <TimePicker format="HH:mm" placeholder="请选择时间" @on-change="timepickerChange($event, item.key)" style="width: 80px" :value="deviceModelForm[item.key]"></TimePicker>
           </FormItem>
         </ListItem>
+        </div>
       </List>
     </Form>
   </my-card>
@@ -37,6 +39,13 @@ import { debounce } from '@/libs/tools'
 export default {
   name: 'DeviceDetail',
   data () {
+    const validateRange1 = (rule, value, callback) => {
+      if (value < -500 || value > 500) {
+        callback(new Error('取值范围从-500到500'))
+      } else {
+        callback()
+      }
+    }
     return {
       deviceModel: [
         { key: 'deviceId', label: '设备ID', value: '', model: 'xxxx' },
@@ -67,6 +76,50 @@ export default {
         { key: 'enviDetectorFix', label: '环境温度探头修正', value: '', model: 'temp' },
         { key: 'storageDetectorFix', label: '库温探头修正', value: '', model: 'temp' }
       ],
+      ruleValidate: {
+        storageDetectorFix: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        enviDetectorFix: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        defrostDetectorFix: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        cmStartTemp: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        cmStopTemp: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        highTempAlarm: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        lowTempAlarm: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        cmOnOffIntv: [
+          { min: 10, max: 36000, message: '取值范围，从10到36000，其他为非法', trigger: 'blur' }
+        ],
+        defrostCycle: [
+          { min: 1800, max: 64800, message: '取值范围，从1800到64800，其他为非法', trigger: 'blur' }
+        ],
+        defrostDuring: [
+          { min: 10, max: 7200, message: '取值范围，从10到7200，其他为非法', trigger: 'blur' }
+        ],
+        defrostStopTemp: [
+          { validator: validateRange1, trigger: 'blur' }
+        ],
+        fanStopDelay: [
+          { min: 0, max: 65535, message: '取值范围，从0到65535，其他为非法', trigger: 'blur' }
+        ],
+        fanStartDelay: [
+          { min: 0, max: 65535, message: '取值范围，从0到65535，其他为非法', trigger: 'blur' }
+        ],
+        fanStartTemp: [
+          { validator: validateRange1, trigger: 'blur' }
+        ]
+      },
       isShowModal: false,
       deviceModelForm: {},
       selectedItem: 'temp',
@@ -103,10 +156,14 @@ export default {
   watch: {
     deviceModelForm: {
       handler (newVal, oldVal) {
-        console.log(oldVal)
-        if (Object.keys(oldVal).length !== 0) {
-          this.debounced()
-        }
+        this.$refs.formDynamic.validate((valid) => {
+          console.log(valid)
+          if (valid) {
+            if (Object.keys(oldVal).length !== 0) {
+              this.debounced()
+            }
+          }
+        })
       },
       deep: true
     },
@@ -172,6 +229,13 @@ export default {
 }
 </script>
 
+<style lang="less">
+.detail-container {
+  .ivu-list-split .ivu-list-item {
+    border-bottom: 1px solid #3527B1;
+  }
+}
+</style>
 <style lang="less" scoped>
 .title {
   display: flex;
@@ -198,7 +262,6 @@ export default {
     border: none;
     border-radius: 0;
     border-bottom: 1px solid;
-    width: 100px;
   }
 }
 .timepicker-item {

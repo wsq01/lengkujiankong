@@ -34,7 +34,7 @@ export default {
   position: absolute;
   left: -2px;
   top: -2px;
-  padding: 8px;
+  padding: 4px;
   border-style: solid;
   border-color: @card-boder-color;
   border-width: 1px 0 0 1px;
@@ -43,7 +43,7 @@ export default {
   position: absolute;
   right: -2px;
   top: -2px;
-  padding: 8px;
+  padding: 4px;
   border-style: solid;
   border-color: @card-boder-color;
   border-width: 1px 1px 0 0;
@@ -52,7 +52,7 @@ export default {
   position: absolute;
   right: -2px;
   bottom: -2px;
-  padding: 8px;
+  padding: 4px;
   border-style: solid;
   border-color: @card-boder-color;
   border-width: 0 1px 1px 0;
@@ -61,7 +61,7 @@ export default {
   position: absolute;
   left: -2px;
   bottom: -2px;
-  padding: 8px;
+  padding: 4px;
   border-style: solid;
   border-color: @card-boder-color;
   border-width: 0 0 1px 1px;

@@ -11,13 +11,13 @@
         <div class="choosemenu">
             <RadioGroup v-model="deviceState">
                 <Radio label="total">
-                    <span class="muneblack"><b class="allnum">{{deviceStatus.total}}</b>全部</span>
+                  <span class="muneblack"><b class="allnum">{{deviceStatus.total}}</b>全部</span>
                 </Radio>
                 <Radio label="online">
-                    <span class="muneblack"><b class="onlinenum">{{deviceStatus.online}}</b>在线</span>
+                  <span class="muneblack"><b class="onlinenum">{{deviceStatus.online}}</b>在线</span>
                 </Radio>
                 <Radio label="offline">
-                    <span class="muneblack"><b class="outlinenum">{{deviceStatus.offline}}</b>离线</span>
+                  <span class="muneblack"><b class="outlinenum">{{deviceStatus.offline}}</b>离线</span>
                 </Radio>
             </RadioGroup>
         </div>

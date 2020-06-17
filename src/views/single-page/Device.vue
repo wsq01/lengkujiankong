@@ -43,7 +43,7 @@
     <Row :gutter="20">
       <i-col :lg="24" :md="24" v-show="leftChartList.length != 0">
         <my-card>
-          <charts :option="lineChartOption" style="height: 350px"></charts>
+          <charts :option="lineChartOption" style="height: 400px"></charts>
         </my-card>
       </i-col>
       <!-- <i-col :lg="12" :md="24" v-if="leftChartList.length != 0">
@@ -61,6 +61,7 @@ import MyCard from '_c/MyCard'
 import { getDeviceModel, getDevice } from '@/api/user'
 import { getRTDeviceMainInfo } from '@/api/hd'
 import { getHDeviceDataTrend } from '@/api/rt'
+import { getDate } from '@/libs/tools'
 
 export default {
   name: 'Device',
@@ -115,7 +116,7 @@ export default {
       if (res.data.code === 0) {
         this.leftChartList = res.data.data.list
         const xAxisData = res.data.data.list.map((item, index) => {
-          return new Date(item.time).toTimeString().split(' ')[0]
+          return getDate(new Date(item.time).getTime() / 1000).replace(' ', '\n')
         })
         const seriesData = res.data.data.list.map((item, index) => {
           return item.storageTemp
@@ -155,9 +156,9 @@ export default {
           data: ['冷库温度', '环境温度']
         },
         grid: {
-          left: '3%',
+          left: '4%',
           right: '4%',
-          bottom: '3%',
+          bottom: '10%',
           containLabel: true
         },
         xAxis: {
@@ -175,6 +176,27 @@ export default {
           boundaryGap: false,
           data: xAxisData
         },
+        dataZoom: [
+          {
+            show: true,
+            realtime: true,
+            start: 0,
+            end: 100,
+            left: '10%',
+            right: '10%'
+          },
+          {
+            type: 'slider',
+            realtime: true,
+            start: 0,
+            end: 100,
+            textStyle: {
+              color: '#fff'
+            },
+            left: '10%',
+            right: '10%'
+          }
+        ],
         yAxis: {
           type: 'value',
           splitLine: {
@@ -208,6 +230,7 @@ export default {
           }
         ]
       }
+      console.log(this.lineChartOption)
     },
     async getDeviceModel () {
       const params = { deviceId: this.deviceId }
@@ -363,7 +386,7 @@ export default {
   li {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid #3527B1;
     line-height: 73px;
     margin: 0 auto 10px;
   }
